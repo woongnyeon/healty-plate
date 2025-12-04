@@ -34,7 +34,7 @@ jobs:
         # 2. PR 본문에서 '#숫자' 패턴만 찾아서 이슈 번호를 추출합니다.
         # 💡 수정된 패턴: 공백이나 줄 시작/끝에 있는 '#숫자' 패턴을 찾습니다.
         # 추출된 번호 앞에 붙은 '#' 기호는 제거합니다.
-        ISSUE_NUMBERS=$(echo "$PR_BODY" | grep -oE "\s#([0-9]+)|\n#([0-9]+)|^#([0-9]+)" | tr -d '[:alpha:]' | tr -d '[:space:]' | tr -d '#')
+        ISSUE_NUMBERS=$(echo "$PR_BODY" | grep -oE "#[0-9]+" | tr -d '#')
 
         if [[ -z "$ISSUE_NUMBERS" ]]; then
           echo "PR 본문에서 닫을 이슈 번호를 찾지 못했습니다. 작업을 종료합니다."
