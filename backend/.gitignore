@@ -35,3 +35,10 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Setting File (yaml)###
+application-dev.yaml
+application-prod.yaml
+
+### Environment Variables ###
+.env
