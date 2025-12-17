@@ -10,35 +10,37 @@ const NAV_ITEMS = [
 
 export const RecipeLayout = () => {
   return (
-    <div className="w-full mt-[50px] px-4 md:px-10 lg:px-[90px]">
-      <nav>
-        <ul className="flex gap-4 md:gap-6 lg:gap-8 h-14 items-center">
-          {NAV_ITEMS.map((item) => (
-            <li key={item.path}>
-              <NavLink
-                to={item.path}
-                className={({ isActive }) =>
-                  [
-                    "transition-colors",
-                    "text-sm md:text-base lg:text-nav-items",
-                    isActive
-                      ? "text-main font-bold border-b-2 border-main pb-2"
-                      : "text-tertiary",
-                  ].join(" ")
-                }
-              >
-                {item.label}
-              </NavLink>
-            </li>
-          ))}
-        </ul>
-      </nav>
+    <>
+      <div className="w-full mt-[50px] px-4 md:px-10 lg:px-12">
+        <nav>
+          <ul className="flex gap-4 md:gap-6 lg:gap-8 h-14 items-center">
+            {NAV_ITEMS.map((item) => (
+              <li key={item.path}>
+                <NavLink
+                  to={item.path}
+                  className={({ isActive }) =>
+                    [
+                      "transition-colors",
+                      "text-sm md:text-base lg:text-nav-items",
+                      isActive
+                        ? "text-main font-bold border-b-2 border-main pb-2"
+                        : "text-tertiary",
+                    ].join(" ")
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      <main className="mx-auto py-8">
-        <Outlet />
-      </main>
+        <main className="mx-auto py-8">
+          <Outlet />
+        </main>
 
-      <WriteFloatingButton />
-    </div>
+        <WriteFloatingButton />
+      </div>
+    </>
   );
 };
