@@ -12,6 +12,7 @@ export default {
         bgsecondary: "#d9d9d9",
         card: "#ffffff",
         meta: "#767676",
+        header: "#111111",
       },
       fontFamily: {
         sans: ["Pretendard", "ui-sans-serif", "system-ui"],
@@ -21,6 +22,7 @@ export default {
         "card-title": ["24px", { lineHeight: "32px" }],
         "card-content": ["14px", { lineHeight: "20px" }],
         "card-meta": ["12px", { lineHeight: "16px" }],
+        "header-items": ["16px", { lineHeight: "22px" }],
       },
     },
   },
