@@ -35,7 +35,7 @@ export const useResponsive = (): ResponsiveState => {
     isMobile,
     isTablet,
     isDesktop,
-    gridCols: isDesktop ? 4 : 2,
+    gridCols: isDesktop ? 3 : 2,
     width: windowSize.width,
     height: windowSize.height,
   };
