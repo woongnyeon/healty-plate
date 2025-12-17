@@ -6,7 +6,7 @@ interface RecipeCardProps {
 
 export const RecipeCard = ({ recipe }: RecipeCardProps) => {
   return (
-    <article className="w-full max-w-sm rounded-md overflow-hidden bg-card shadow-sm flex flex-col">
+    <article className="w-full max-w-sm rounded-md overflow-hidden bg-card shadow-sm flex flex-col transition-all duration-300 ease-out hover:-translate-y-1.5 hover:shadow-lg">
       <div className="w-full h-1/3 overflow-hidden">
         <img
           src={recipe.thumbnail}
