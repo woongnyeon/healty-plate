@@ -10,5 +10,17 @@ export const WeekSatisticsSection = () => {
     { label: "Sat", value: 8 },
     { label: "Sun", value: 1 },
   ];
-  return <WeekSatisticsBar title="주간 레시피 작성 현황" data={weekData} />;
+  return (
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-red-500">♡</span>
+          <h2 className="text-base font-semibold text-gray-900">
+            주간 통계 추이
+          </h2>
+        </div>
+      </div>
+      <WeekSatisticsBar title="주간 레시피 작성 현황" data={weekData} />
+    </div>
+  );
 };

@@ -17,15 +17,25 @@ export const StatisticsSection = () => {
   ];
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
-      {/* 좌: 그래프 (넓게) */}
-      <div className="lg:col-span-8">
-        <StatisticsGraph title="조회수 및 좋아요 추이" data={graphData} />
+    <div>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-red-500">♡</span>
+          <h2 className="text-base font-semibold text-gray-900">
+            내 레시피 통계
+          </h2>
+        </div>
       </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
+        {/* 좌: 그래프 (넓게) */}
+        <div className="lg:col-span-8">
+          <StatisticsGraph title="조회수 및 좋아요 추이" data={graphData} />
+        </div>
 
-      {/* 우: 카테고리 분포 */}
-      <div className="lg:col-span-4">
-        <CategoryDistribution data={categoryData} />
+        {/* 우: 카테고리 분포 */}
+        <div className="lg:col-span-4">
+          <CategoryDistribution data={categoryData} />
+        </div>
       </div>
     </div>
   );
