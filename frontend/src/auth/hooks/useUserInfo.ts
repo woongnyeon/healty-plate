@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface DummyUser {
   id: string;
@@ -7,7 +7,13 @@ interface DummyUser {
 }
 
 export const useUserInfo = () => {
-  const [dummyUser, setDummyUserInfo] = useState<DummyUser>();
+  const [dummyUser, setDummyUserInfo] = useState<DummyUser | null>(null);
+  useEffect(() => {
+    const stored = localStorage.getItem("user");
+    if (stored) {
+      setDummyUserInfo(JSON.parse(stored));
+    }
+  }, []);
 
   const handleLogin = () => {
     setUserInfo();
@@ -32,11 +38,7 @@ export const useUserInfo = () => {
   const clearUserInfo = () => {
     localStorage.removeItem("user");
 
-    setDummyUserInfo({
-      id: "",
-      email: "",
-      name: "",
-    });
+    setDummyUserInfo(null);
   };
 
   return {
