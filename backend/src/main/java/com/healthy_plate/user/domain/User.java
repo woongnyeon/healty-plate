@@ -56,5 +56,12 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
+    public void updateNickname(final String nickname) {
+        this.profile.updateNickname(nickname);
+    }
+
+    public boolean isFirstLogin() {
+        return profile == null || !this.profile.isNicknameSet();
+    }
 
 }
