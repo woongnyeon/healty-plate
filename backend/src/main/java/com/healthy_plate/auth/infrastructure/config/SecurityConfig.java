@@ -1,5 +1,6 @@
 package com.healthy_plate.auth.infrastructure.config;
 
+import com.healthy_plate.auth.infrastructure.jwt.JwtAuthenticationFilter;
 import com.healthy_plate.auth.infrastructure.oauth2.OAuth2LoginFailureHandler;
 import com.healthy_plate.auth.infrastructure.oauth2.OAuth2LoginSuccessHandler;
 import com.healthy_plate.auth.infrastructure.oauth2.OAuth2UserService;
@@ -9,7 +10,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,21 +22,37 @@ public class SecurityConfig {
     private final OAuth2UserService oAuth2UserService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/",
+                    "/login/**",
+                    "/oauth2/**",
+                    "/api/auth/refresh",
+                    "/api/auth/token",
+                    "/api/auth/register"
+                ).permitAll()
+                .anyRequest().authenticated()
+            )
+
             .oauth2Login(oauth2 -> oauth2
                 .userInfoEndpoint(userInfo -> userInfo
                     .userService(oAuth2UserService)
                 )
                 .successHandler(oAuth2LoginSuccessHandler)
                 .failureHandler(oAuth2LoginFailureHandler)
-            );
+            )
+
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
