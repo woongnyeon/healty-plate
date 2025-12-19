@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfile {
 
-    @Column(nullable = false)
+    @Column
     private String nickname;
 
     @Column(name = "profile_image_url")
@@ -24,6 +24,22 @@ public class UserProfile {
         profile.nickname = nickname.trim();
         profile.profileImageUrl = profileImageUrl;
         return profile;
+    }
+
+    public static UserProfile createEmpty() {
+        UserProfile profile = new UserProfile();
+        profile.nickname = null;
+        profile.profileImageUrl = null;
+        return profile;
+    }
+
+    public void updateNickname(String nickname) {
+        validateName(nickname);
+        this.nickname = nickname.trim();
+    }
+
+    public boolean isNicknameSet() {
+        return this.nickname != null;
     }
 
     private static void validateName(String name) {
