@@ -37,13 +37,11 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             user.getRole(),
             oAuth2User.getAttributes()
         );
-
-
     }
 
     private User createUser(OAuth2Provider provider, OAuth2UserInfo userInfo) {
         Email email = Email.of(userInfo.getEmail());
-        UserProfile profile = UserProfile.of(userInfo.getName(), null);
+        UserProfile profile = UserProfile.createEmpty();
         User user = new User(
             email,
             profile,
