@@ -5,7 +5,7 @@ import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.service.RefreshTokenService;
 import com.healthy_plate.auth.infrastructure.util.CookieUtil;
 import com.healthy_plate.user.domain.model.User;
-import com.healthy_plate.user.infrastructure.JpaUserRepository;
+import com.healthy_plate.user.domain.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,7 +28,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private final JwtTokenProvider jwtTokenProvider;
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public void onAuthenticationSuccess(

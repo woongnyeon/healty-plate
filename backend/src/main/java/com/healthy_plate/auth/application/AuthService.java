@@ -4,7 +4,7 @@ import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
 import com.healthy_plate.user.domain.model.User;
-import com.healthy_plate.user.infrastructure.JpaUserRepository;
+import com.healthy_plate.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +15,7 @@ public class AuthService {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Transactional
     public String generateAccessToken(final String refreshTokenValue) {

@@ -5,7 +5,7 @@ import com.healthy_plate.user.domain.model.Email;
 import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.domain.model.UserProfile;
 import com.healthy_plate.user.domain.model.UserRole;
-import com.healthy_plate.user.infrastructure.JpaUserRepository;
+import com.healthy_plate.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OAuth2UserService extends DefaultOAuth2UserService {
 
-    private final JpaUserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
