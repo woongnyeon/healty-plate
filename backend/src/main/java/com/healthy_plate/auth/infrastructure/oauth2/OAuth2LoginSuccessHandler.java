@@ -4,7 +4,7 @@ import com.healthy_plate.auth.domain.model.JwtProperties;
 import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.service.RefreshTokenService;
 import com.healthy_plate.auth.infrastructure.util.CookieUtil;
-import com.healthy_plate.user.domain.User;
+import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.infrastructure.JpaUserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;

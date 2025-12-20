@@ -1,4 +1,4 @@
-package com.healthy_plate.user.domain;
+package com.healthy_plate.user.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

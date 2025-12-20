@@ -1,6 +1,6 @@
 package com.healthy_plate.auth.infrastructure.oauth2;
 
-import com.healthy_plate.user.domain.UserRole;
+import com.healthy_plate.user.domain.model.UserRole;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;

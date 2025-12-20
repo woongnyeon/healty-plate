@@ -6,7 +6,7 @@ import com.healthy_plate.auth.infrastructure.util.CookieUtil;
 import com.healthy_plate.auth.presentation.dto.AuthResponse;
 import com.healthy_plate.auth.presentation.dto.LoginSuccessResponse;
 import com.healthy_plate.auth.presentation.dto.UpdateNicknameRequest;
-import com.healthy_plate.user.domain.User;
+import com.healthy_plate.user.domain.model.User;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

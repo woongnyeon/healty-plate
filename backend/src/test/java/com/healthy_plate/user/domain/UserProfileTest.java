@@ -1,13 +1,14 @@
 package com.healthy_plate.user.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.healthy_plate.user.domain.model.UserProfile;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("UserProfile 도메인 테스트")
 class UserProfileTest {
@@ -61,8 +62,8 @@ class UserProfileTest {
     void throwExceptionWhenNicknameIsNullOrBlank(String invalidNickname) {
         // when & then
         assertThatThrownBy(() -> UserProfile.of(invalidNickname, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 필수입니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이름은 필수입니다.");
     }
 
     @Test
@@ -73,8 +74,8 @@ class UserProfileTest {
 
         // when & then
         assertThatThrownBy(() -> UserProfile.of(shortNickname, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 2-50자 사이여야 합니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이름은 2-50자 사이여야 합니다.");
     }
 
     @Test
@@ -85,8 +86,8 @@ class UserProfileTest {
 
         // when & then
         assertThatThrownBy(() -> UserProfile.of(longNickname, null))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이름은 2-50자 사이여야 합니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이름은 2-50자 사이여야 합니다.");
     }
 
     @Test

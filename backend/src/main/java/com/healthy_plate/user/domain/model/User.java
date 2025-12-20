@@ -1,4 +1,4 @@
-package com.healthy_plate.user.domain;
+package com.healthy_plate.user.domain.model;
 
 import com.healthy_plate.auth.domain.model.OAuth2Provider;
 import com.healthy_plate.shared.domain.BaseEntity;

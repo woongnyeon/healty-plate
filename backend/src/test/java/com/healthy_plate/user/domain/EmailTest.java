@@ -1,13 +1,14 @@
 package com.healthy_plate.user.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import com.healthy_plate.user.domain.model.Email;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @DisplayName("Email 도메인 테스트")
 class EmailTest {
@@ -58,7 +59,7 @@ class EmailTest {
     void throwExceptionWhenEmailIsNullOrBlank(String invalidEmail) {
         // when & then
         assertThatThrownBy(() -> Email.of(invalidEmail))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessage("이메일은 필수입니다.");
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("이메일은 필수입니다.");
     }
 }

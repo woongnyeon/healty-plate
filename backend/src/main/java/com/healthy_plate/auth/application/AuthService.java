@@ -3,7 +3,7 @@ package com.healthy_plate.auth.application;
 import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
-import com.healthy_plate.user.domain.User;
+import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.infrastructure.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

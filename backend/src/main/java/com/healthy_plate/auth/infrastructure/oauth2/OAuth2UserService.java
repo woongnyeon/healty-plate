@@ -1,10 +1,10 @@
 package com.healthy_plate.auth.infrastructure.oauth2;
 
 import com.healthy_plate.auth.domain.model.OAuth2Provider;
-import com.healthy_plate.user.domain.Email;
-import com.healthy_plate.user.domain.User;
-import com.healthy_plate.user.domain.UserProfile;
-import com.healthy_plate.user.domain.UserRole;
+import com.healthy_plate.user.domain.model.Email;
+import com.healthy_plate.user.domain.model.User;
+import com.healthy_plate.user.domain.model.UserProfile;
+import com.healthy_plate.user.domain.model.UserRole;
 import com.healthy_plate.user.infrastructure.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;

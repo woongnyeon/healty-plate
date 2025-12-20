@@ -1,10 +1,14 @@
 package com.healthy_plate.user.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.healthy_plate.auth.domain.model.OAuth2Provider;
+import com.healthy_plate.user.domain.model.Email;
+import com.healthy_plate.user.domain.model.User;
+import com.healthy_plate.user.domain.model.UserProfile;
+import com.healthy_plate.user.domain.model.UserRole;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("User 도메인 테스트")
 class UserTest {
