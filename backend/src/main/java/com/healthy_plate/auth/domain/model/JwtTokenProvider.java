@@ -30,14 +30,14 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.accessTokenExpiration());
 
-        return String.valueOf(Jwts.builder()
+        return Jwts.builder()
             .subject(String.valueOf(userId))
             .claim("email", email)
             .claim("role", role.name())
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(getSigningKey())
-            .compact());
+            .compact();
     }
 
     public String generateRefreshToken(Long userId) {
