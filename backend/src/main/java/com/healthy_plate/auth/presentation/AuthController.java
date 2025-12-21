@@ -70,7 +70,7 @@ public class AuthController implements SwaggerAuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(
-        @CookieValue(name = "refreshToken") final String refreshToken,
+        @CookieValue(name = "refresh_token") final String refreshToken,
         final HttpServletResponse response
     ) {
         authService.logout(refreshToken);
