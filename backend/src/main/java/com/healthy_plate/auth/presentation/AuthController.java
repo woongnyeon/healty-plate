@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements SwaggerAuthController {
 
     private static final String REFRESH_TOKEN_NAME = "refresh_token";
 
