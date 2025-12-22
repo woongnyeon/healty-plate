@@ -11,8 +11,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public User findUser(Long userId) {
+    public User findUser(final Long userId) {
         return userRepository.findById(userId)
             .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+    }
+
+    public boolean isDuplicatedNickname(final String nickname) {
+        return userRepository.existsByProfileNickname(nickname);
     }
 }

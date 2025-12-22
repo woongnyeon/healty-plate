@@ -12,4 +12,6 @@ public interface UserRepository {
 
     Optional<User> findByProviderAndProviderId(OAuth2Provider provider, String providerId);
 
+    boolean existsByProfileNickname(String nickname);
+
 }
