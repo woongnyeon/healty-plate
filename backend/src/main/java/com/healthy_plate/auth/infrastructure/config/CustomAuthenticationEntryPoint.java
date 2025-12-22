@@ -2,6 +2,7 @@ package com.healthy_plate.auth.infrastructure.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healthy_plate.shared.error.ErrorResponse;
+import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,8 +37,8 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 
         ErrorResponse errorResponse = new ErrorResponse(
             401,
-            "UNAUTHORIZED",
-            "로그인이 필요한 서비스입니다",
+            AuthenticationErrorCode.LOGIN_REQUIRED_SERVICE.getCode(),
+            AuthenticationErrorCode.LOGIN_REQUIRED_SERVICE.getMessage(),
             request.getMethod(),
             request.getRequestURI()
         );

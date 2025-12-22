@@ -39,7 +39,7 @@ public class ErrorResponse {
     public ErrorResponse(int status, ErrorCode errorCode, String method, String path) {
         this.status = status;
         this.code = errorCode.getCode();
-        this.message = errorCode.getClientMessage();
+        this.message = errorCode.getMessage();
         this.method = method;
         this.path = path;
         this.timestamp = LocalDateTime.now();

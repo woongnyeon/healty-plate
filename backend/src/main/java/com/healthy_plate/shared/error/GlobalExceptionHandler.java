@@ -1,6 +1,6 @@
 package com.healthy_plate.shared.error;
 
-import com.healthy_plate.shared.error.exception.AuthenticationException;
+import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler(CustomAuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(
-        final AuthenticationException e,
+        final CustomAuthenticationException e,
         final HttpServletRequest request
     ) {
         log.warn("Authentication Exception - URI '{} {}' ", request.getMethod(), request.getRequestURI(), e);
