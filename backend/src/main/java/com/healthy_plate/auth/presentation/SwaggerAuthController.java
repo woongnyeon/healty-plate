@@ -50,7 +50,7 @@ public interface SwaggerAuthController {
     @Operation(
         summary = "액세스 토큰 조회",
         tags = "인증",
-        description = "리프레시 토큰을 사용하여 액세스 토큰과 사용자 정보를 조회합니다.",
+        description = "리프레시 토큰을 사용하여 액세스 토큰을 조회합니다.",
         responses = {
             @ApiResponse(
                 responseCode = "200",
@@ -80,7 +80,7 @@ public interface SwaggerAuthController {
     @Operation(
         summary = "닉네임 등록",
         tags = "인증",
-        description = "사용자의 닉네임을 등록하고 업데이트된 액세스 토큰과 사용자 정보를 반환합니다.",
+        description = "사용자의 닉네임을 등록하고 액세스 토큰을 반환합니다.",
         responses = {
             @ApiResponse(
                 responseCode = "200",
