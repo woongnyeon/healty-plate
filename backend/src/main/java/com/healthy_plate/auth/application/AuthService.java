@@ -3,6 +3,9 @@ package com.healthy_plate.auth.application;
 import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
+import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
+import com.healthy_plate.shared.error.exception.BusinessErrorCode;
+import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
 import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,18 +23,18 @@ public class AuthService {
     @Transactional
     public String generateAccessToken(final String refreshTokenValue) {
         if (!jwtTokenProvider.validateToken(refreshTokenValue)) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token 입니다.");
+            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
-            .orElseThrow(() -> new IllegalArgumentException("Refresh Token을 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomAuthenticationException(AuthenticationErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
         if (refreshToken.isExpired()) {
             refreshTokenRepository.deleteByToken(refreshTokenValue);
-            throw new IllegalArgumentException("만료된 Refresh Token입니다.");
+            throw new CustomAuthenticationException(AuthenticationErrorCode.EXPIRED_REFRESH_TOKEN);
         }
         User user = userRepository.findById(refreshToken.getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomAuthenticationException(BusinessErrorCode.USER_NOT_FOUND));
 
         return jwtTokenProvider.generateAccessToken(
             user.getId(),
@@ -43,19 +46,19 @@ public class AuthService {
     @Transactional
     public User getUserFromRefreshToken(final String refreshTokenValue) {
         if (!jwtTokenProvider.validateToken(refreshTokenValue)) {
-            throw new IllegalArgumentException("유효하지 않은 Refresh Token 입니다.");
+            throw new CustomAuthenticationException(AuthenticationErrorCode.INVALID_REFRESH_TOKEN);
         }
 
         RefreshToken refreshToken = refreshTokenRepository.findByToken(refreshTokenValue)
-            .orElseThrow(() -> new IllegalArgumentException("Refresh Token을 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomAuthenticationException(AuthenticationErrorCode.REFRESH_TOKEN_NOT_FOUND));
 
         if (refreshToken.isExpired()) {
             refreshTokenRepository.deleteByToken(refreshTokenValue);
-            throw new IllegalArgumentException("만료된 Refresh Token입니다.");
+            throw new CustomAuthenticationException(AuthenticationErrorCode.EXPIRED_REFRESH_TOKEN);
         }
 
         return userRepository.findById(refreshToken.getUserId())
-            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
+            .orElseThrow(() -> new CustomAuthenticationException(BusinessErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional
@@ -63,7 +66,7 @@ public class AuthService {
         User user = getUserFromRefreshToken(refreshTokenValue);
 
         if (!user.isFirstLogin()) {
-            throw new IllegalArgumentException("이미 닉네임이 등록된 사용자입니다.");
+            throw new CustomAuthenticationException(AuthenticationErrorCode.ALREADY_REGISTERED_NICKNAME);
         }
 
         user.updateNickname(nickname);

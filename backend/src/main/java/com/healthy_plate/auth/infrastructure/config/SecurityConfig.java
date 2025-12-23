@@ -23,6 +23,7 @@ public class SecurityConfig {
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
     private final OAuth2LoginFailureHandler oAuth2LoginFailureHandler;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -41,11 +42,13 @@ public class SecurityConfig {
                     "/v3/api-docs/**",
                     "/swagger-resources/**",
                     "/oauth2/**",
-                    "/api/auth/refresh",
-                    "/api/auth/token",
-                    "/api/auth/register"
+                    "/api/auth/**"
                 ).permitAll()
                 .anyRequest().authenticated()
+            )
+
+            .exceptionHandling(exception -> exception
+                .authenticationEntryPoint(customAuthenticationEntryPoint)
             )
 
             .oauth2Login(oauth2 -> oauth2

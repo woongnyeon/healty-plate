@@ -1,5 +1,6 @@
 package com.healthy_plate.auth.infrastructure.oauth2;
 
+import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -26,8 +27,8 @@ public class OAuth2LoginFailureHandler extends SimpleUrlAuthenticationFailureHan
 
         log.error("OAuth2 로그인 실패", exception);
         String redirectUrl = UriComponentsBuilder.fromUriString(failureRedirectUrl)
-            .queryParam("error", "oauth2_failed")
-            .queryParam("message", "소셜 로그인에 실패했습니다")
+            .queryParam("error", AuthenticationErrorCode.OAUTH2_LOGIN_FAILED.getCode())
+            .queryParam("message", AuthenticationErrorCode.OAUTH2_LOGIN_FAILED.getMessage())
             .build()
             .toUriString();
 
