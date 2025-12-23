@@ -75,6 +75,7 @@ public class AuthService {
         }
 
         user.updateNickname(nickname);
+        userRepository.save(user);
 
         return jwtTokenProvider.generateAccessToken(
             user.getId(),
