@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { useUserInfo } from "../../auth/hooks/useUserInfo";
+import { useGetUserInfo } from "../../auth/hooks/useAuthQuery";
 
 export const Profile = () => {
-  const { dummyUser } = useUserInfo();
+  const user = useGetUserInfo();
   useEffect(() => {
-    console.log(dummyUser?.email);
+    console.log(user?.data?.email);
   });
   return (
     <section className="w-full flex justify-between items-center px-8 py-10">
@@ -31,14 +31,14 @@ export const Profile = () => {
           <div className="flex flex-col gap-2">
             <div className="flex flex gap-1">
               <h2 className="text-primary text-card-title font-semibold">
-                {dummyUser?.name}
+                {user?.data?.nickname}
               </h2>
               <span className="text-profile text-profile-items pt-1">
                 (heisfxxkingay)
               </span>
             </div>
             <p className="mt-1 text-profile text-profile-items text-sm">
-              내 레시피를 보고 왜 요리를 하는 지 모르겠어
+              {user?.data?.provider}
             </p>
           </div>
         </div>
