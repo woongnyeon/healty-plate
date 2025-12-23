@@ -5,6 +5,7 @@ import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import net.minidev.json.annotate.JsonIgnore;
 
 @Embeddable
 @Getter
@@ -47,6 +48,7 @@ public class UserProfile {
         this.introduction = introduction;
     }
 
+    @JsonIgnore
     public boolean isNicknameSet() {
         return this.nickname != null;
     }
