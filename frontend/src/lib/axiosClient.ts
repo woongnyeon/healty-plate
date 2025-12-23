@@ -1,40 +1,40 @@
 import axios, { type AxiosInstance } from "axios";
-import {
-  clearTokens,
-  updateAccessToken,
-  getAccessToken,
-  getRefreshToken,
-} from "./tokenStorage";
+import { clearTokens, updateAccessToken, getAccessToken } from "./tokenStorage";
 
-const axiosClent = axios.create({
-  baseURL: "",
+const axiosClient = axios.create({
+  baseURL: "/api",
+  withCredentials: true,
 });
 
-const authFreeEndpoints = [""];
+console.log(axiosClient.defaults.baseURL);
 
-const setupInterceptors = (
-  client: AxiosInstance,
-  serverName: string,
-  skipAuth = false
-) => {
+const authFreeEndpoints = [
+  "/auth/reissue",
+  "/auth/token",
+  "/auth/register",
+  "/users/duplicate",
+  "/oauth2",
+  "/login",
+];
+
+const setupInterceptors = (client: AxiosInstance, skipAuth = false) => {
   client.interceptors.request.use((config) => {
-    if (
-      !skipAuth &&
-      !authFreeEndpoints.some((endpoint) => config.url?.includes(endpoint))
-    ) {
-      const accessToken = getAccessToken();
+    const isFree = authFreeEndpoints.some((endpoint) =>
+      (config.url ?? "").startsWith(endpoint)
+    );
 
+    if (!skipAuth && !isFree) {
+      const accessToken = getAccessToken();
       if (accessToken) {
-        config.headers.Authorization = `Beare ${accessToken}`;
+        // ✅ 오타 수정: Beare -> Bearer
+        config.headers.Authorization = `Bearer ${accessToken}`;
       }
     }
     return config;
   });
 
   client.interceptors.response.use(
-    (response) => {
-      return response;
-    },
+    (response) => response,
     async (error) => {
       const originalRequest = error.config;
 
@@ -46,37 +46,30 @@ const setupInterceptors = (
         originalRequest._retry = true;
 
         try {
-          const refreshToken = getRefreshToken();
+          const refreshResponse = await axiosClient.post("/auth/token");
 
-          if (refreshToken) {
-            const refreshResponse = await axiosClent.post("", { refreshToken });
+          const newAccessToken = refreshResponse.data.access_token;
+          console.log(refreshResponse.data.access_token);
+          updateAccessToken(newAccessToken);
 
-            const newAccessToken = refreshResponse.data.accessToken;
-
-            updateAccessToken(newAccessToken);
-
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-            return client(originalRequest);
-          }
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          return client(originalRequest);
         } catch (refreshError) {
           console.error("토큰 갱신 실패", refreshError);
           clearTokens();
-
-          if (typeof window !== "undefined") {
-            window.location.href = "";
-          }
+          if (typeof window !== "undefined") window.location.href = "/login";
         }
       }
+
       return Promise.reject(error);
     }
   );
 };
 
-setupInterceptors(axiosClent, "Spring");
+setupInterceptors(axiosClient);
 
 export const apiRequest = {
-  default: axiosClent,
+  default: axiosClient,
 };
 
-export default axiosClent;
+export default axiosClient;
