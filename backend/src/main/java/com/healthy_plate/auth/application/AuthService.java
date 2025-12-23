@@ -4,6 +4,7 @@ import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
 import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
+import com.healthy_plate.shared.error.exception.BusinessErrorCode;
 import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
 import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.domain.repository.UserRepository;
@@ -33,7 +34,7 @@ public class AuthService {
             throw new CustomAuthenticationException(AuthenticationErrorCode.EXPIRED_REFRESH_TOKEN);
         }
         User user = userRepository.findById(refreshToken.getUserId())
-            .orElseThrow(() -> new CustomAuthenticationException(AuthenticationErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new CustomAuthenticationException(BusinessErrorCode.USER_NOT_FOUND));
 
         return jwtTokenProvider.generateAccessToken(
             user.getId(),
@@ -57,7 +58,7 @@ public class AuthService {
         }
 
         return userRepository.findById(refreshToken.getUserId())
-            .orElseThrow(() -> new CustomAuthenticationException(AuthenticationErrorCode.USER_NOT_FOUND));
+            .orElseThrow(() -> new CustomAuthenticationException(BusinessErrorCode.USER_NOT_FOUND));
     }
 
     @Transactional

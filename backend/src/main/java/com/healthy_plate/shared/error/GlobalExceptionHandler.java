@@ -1,5 +1,6 @@
 package com.healthy_plate.shared.error;
 
+import com.healthy_plate.shared.error.exception.BusinessException;
 import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +19,23 @@ public class GlobalExceptionHandler {
         final HttpServletRequest request
     ) {
         log.warn("Authentication Exception - URI '{} {}' ", request.getMethod(), request.getRequestURI(), e);
-        final HttpStatus httpStatus = HttpStatus.UNAUTHORIZED;
+        final HttpStatus httpStatus = e.getErrorCode().getStatus();
+        ErrorResponse errorResponse = new ErrorResponse(
+            httpStatus.value(),
+            e.getErrorCode(),
+            request.getMethod(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.status(httpStatus).body(errorResponse);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(
+        final BusinessException e,
+        final HttpServletRequest request
+    ) {
+        log.warn("Business Exception - URI '{} {}' ", request.getMethod(), request.getRequestURI(), e);
+        final HttpStatus httpStatus = e.getErrorCode().getStatus();
         ErrorResponse errorResponse = new ErrorResponse(
             httpStatus.value(),
             e.getErrorCode(),

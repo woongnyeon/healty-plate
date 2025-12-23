@@ -1,5 +1,7 @@
 package com.healthy_plate.user.application;
 
+import com.healthy_plate.shared.error.exception.BusinessErrorCode;
+import com.healthy_plate.shared.error.exception.BusinessException;
 import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +15,7 @@ public class UserService {
 
     public User findUser(final Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new IllegalArgumentException("해당 유저가 존재하지 않습니다."));
+            .orElseThrow(() -> new BusinessException(BusinessErrorCode.USER_NOT_FOUND));
     }
 
     public boolean isDuplicatedNickname(final String nickname) {
