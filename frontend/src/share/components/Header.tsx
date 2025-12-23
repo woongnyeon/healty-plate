@@ -1,20 +1,21 @@
 import { Link } from "react-router-dom";
-import { useUserInfo } from "../../auth/hooks/useUserInfo";
+import { useGetUserInfo } from "../../auth/hooks/useAuthQuery";
+import { useAuth } from "../../auth/hooks/useAuth";
 
 export const Header = () => {
-  const { handleLogin, handleLogout } = useUserInfo();
-  const isActive = localStorage.getItem("user") ? true : false;
+  const { data: userInfo } = useGetUserInfo();
+  const { handleLogout } = useAuth();
+
+  const isActive = !!userInfo;
+
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-white">
-      {/* 내부 컨텐츠 영역 */}
       <div className="h-14 flex items-center justify-between px-4 md:px-10 lg:px-[90px]">
-        {/* 좌측 로고 */}
         <img src="/assets/logo.png" alt="logo" className="h-6" />
 
-        {/* 우측 메뉴 */}
         <div className="flex items-center gap-4">
           {isActive ? (
-            <div className="flex flex gap-2">
+            <div className="flex gap-2">
               <Link
                 to="/my"
                 className="text-sm md:text-base text-primary font-medium"
@@ -31,9 +32,8 @@ export const Header = () => {
             </div>
           ) : (
             <Link
-              to="/"
+              to="/login"
               className="text-sm md:text-base text-primary font-medium"
-              onClick={handleLogin}
             >
               로그인
             </Link>
