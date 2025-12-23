@@ -19,6 +19,9 @@ public class UserService {
     }
 
     public boolean isDuplicatedNickname(final String nickname) {
+        if (nickname == null || nickname.isBlank()) {
+            throw new IllegalArgumentException("닉네임은 null이거나 공백일 수 없습니다.");
+        }
         return userRepository.existsByProfileNickname(nickname);
     }
 }
