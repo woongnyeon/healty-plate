@@ -3,6 +3,7 @@ package com.healthy_plate.auth.application;
 import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
+import com.healthy_plate.auth.presentation.dto.UpdateNicknameRequest;
 import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
 import com.healthy_plate.shared.error.exception.BusinessErrorCode;
 import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
@@ -67,14 +68,9 @@ public class AuthService {
     }
 
     @Transactional
-    public String registerNickname(final String refreshTokenValue, final String nickname) {
+    public String registerNickname(final String refreshTokenValue, final UpdateNicknameRequest request) {
         User user = getUserFromRefreshToken(refreshTokenValue);
-
-        if (!user.isFirstLogin()) {
-            throw new CustomAuthenticationException(AuthenticationErrorCode.ALREADY_REGISTERED_NICKNAME);
-        }
-
-        user.updateNickname(nickname);
+        user.updateProfile(request.nickname(),request.profileImageUrl(),request.introduction());
         userRepository.save(user);
 
         return jwtTokenProvider.generateAccessToken(

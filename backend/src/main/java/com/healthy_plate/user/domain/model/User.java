@@ -56,8 +56,11 @@ public class User extends BaseEntity {
         this.role = role;
     }
 
-    public void updateNickname(final String nickname) {
-        this.profile.updateNickname(nickname);
+    public void updateProfile(final String nickname, final String profileImageUrl, final String introduction) {
+        if (this.profile == null) {
+            this.profile = UserProfile.createEmpty();
+        }
+        this.profile.updateNickname(nickname,profileImageUrl,introduction);
     }
 
     public boolean isFirstLogin() {
