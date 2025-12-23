@@ -4,7 +4,7 @@ import com.healthy_plate.auth.application.AuthService;
 import com.healthy_plate.auth.domain.model.JwtProperties;
 import com.healthy_plate.auth.infrastructure.util.CookieUtil;
 import com.healthy_plate.auth.presentation.dto.TokenResponse;
-import com.healthy_plate.auth.presentation.dto.UpdateNicknameRequest;
+import com.healthy_plate.auth.presentation.dto.UpdateUserProfileRequest;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,7 +45,7 @@ public class AuthController implements SwaggerAuthController {
 
     @PatchMapping("/register")
     public ResponseEntity<TokenResponse> registerNickname(
-        @Valid @RequestBody final UpdateNicknameRequest request,
+        @Valid @RequestBody final UpdateUserProfileRequest request,
         final HttpServletRequest httpRequest
     ) {
         String refreshToken = CookieUtil.findRefreshTokenWithCookie(httpRequest.getCookies());

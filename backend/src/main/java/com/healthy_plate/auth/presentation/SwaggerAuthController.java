@@ -1,7 +1,7 @@
 package com.healthy_plate.auth.presentation;
 
 import com.healthy_plate.auth.presentation.dto.TokenResponse;
-import com.healthy_plate.auth.presentation.dto.UpdateNicknameRequest;
+import com.healthy_plate.auth.presentation.dto.UpdateUserProfileRequest;
 import com.healthy_plate.shared.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -78,7 +78,7 @@ public interface SwaggerAuthController {
         }
     )
     ResponseEntity<TokenResponse> registerNickname(
-        @Valid @RequestBody UpdateNicknameRequest request,
+        @Valid @RequestBody UpdateUserProfileRequest request,
         HttpServletRequest httpRequest
     );
 
@@ -111,7 +111,7 @@ public interface SwaggerAuthController {
         }
     )
     ResponseEntity<Void> logout(
-        @CookieValue(name = "refreshToken") String refreshToken,
+        @CookieValue(name = "refresh_token") String refreshToken,
         HttpServletResponse response
     );
 }
