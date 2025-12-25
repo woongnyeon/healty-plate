@@ -11,7 +11,11 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 
     public KakaoOAuth2UserInfo(Map<String, Object> attributes) {
         this.attributes = attributes;
-        this.kakaoAccount = extractMap(attributes.get("kakao_account"));
+        Object kakaoAccountObj = attributes.get("kakao_account");
+        if (kakaoAccountObj == null) {
+            throw new IllegalArgumentException("Kakao account object is missing in Kakao OAuth2 attributes");
+        }
+        this.kakaoAccount = extractMap(kakaoAccountObj);
     }
 
     @Override
@@ -21,12 +25,20 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        return attributes.get("id").toString();
+        Object id = attributes.get("id");
+        if (id == null) {
+            throw new IllegalArgumentException("Provider ID is missing in Kakao OAuth2 response");
+        }
+        return id.toString();
     }
 
     @Override
     public String getEmail() {
-        return kakaoAccount.get("email").toString();
+        Object email = kakaoAccount.get("email");
+        if (email == null) {
+            throw new IllegalArgumentException("Email is missing in Kakao OAuth2 response");
+        }
+        return email.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -34,7 +46,7 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
         if (obj instanceof Map) {
             return (Map<String, Object>) obj;
         } else {
-            throw new IllegalArgumentException("Invalid " + "kakao_account" + " structure in OAuth2 response");
+            throw new IllegalArgumentException("Invalid kakao_account structure in Kakao OAuth2 response");
         }
     }
 }

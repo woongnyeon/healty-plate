@@ -9,7 +9,11 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo{
     private final Map<String, Object> response;
 
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
-        this.response = extractMap(attributes.get("response"));
+        Object responseObj = attributes.get("response");
+        if (responseObj == null) {
+            throw new IllegalArgumentException("Response object is missing in Naver OAuth2 attributes");
+        }
+        this.response = extractMap(responseObj);
     }
 
     @Override
@@ -19,12 +23,20 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo{
 
     @Override
     public String getProviderId() {
-        return response.get("id").toString();
+        Object id = response.get("id");
+        if (id == null) {
+            throw new IllegalArgumentException("Provider ID is missing in Naver OAuth2 response");
+        }
+        return id.toString();
     }
 
     @Override
     public String getEmail() {
-        return response.get("email").toString();
+        Object email = response.get("email");
+        if (email == null) {
+            throw new IllegalArgumentException("Email is missing in Naver OAuth2 response");
+        }
+        return email.toString();
     }
 
     @SuppressWarnings("unchecked")
@@ -32,7 +44,7 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo{
         if (obj instanceof Map) {
             return (Map<String, Object>) obj;
         } else {
-            throw new IllegalArgumentException("Invalid " + "response" + " structure in OAuth2 response");
+            throw new IllegalArgumentException("Invalid response structure in Naver OAuth2 response");
         }
     }
 }
