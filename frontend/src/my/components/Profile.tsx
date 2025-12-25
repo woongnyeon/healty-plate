@@ -1,11 +1,8 @@
-import { useEffect } from "react";
 import { useGetUserInfo } from "../../auth/hooks/useAuthQuery";
 
 export const Profile = () => {
   const user = useGetUserInfo();
-  useEffect(() => {
-    console.log(user?.data?.email);
-  });
+
   return (
     <section className="w-full flex justify-between items-center px-8 py-10">
       <div className="flex items-center gap-6">
@@ -31,14 +28,14 @@ export const Profile = () => {
           <div className="flex flex-col gap-2">
             <div className="flex flex gap-1">
               <h2 className="text-primary text-card-title font-semibold">
-                {user?.data?.nickname}
+                {user?.data?.profile.nickname}
               </h2>
               <span className="text-profile text-profile-items pt-1">
                 (heisfxxkingay)
               </span>
             </div>
             <p className="mt-1 text-profile text-profile-items text-sm">
-              {user?.data?.provider}
+              {user?.data?.profile.introduction}
             </p>
           </div>
         </div>
