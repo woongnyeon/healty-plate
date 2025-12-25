@@ -8,6 +8,7 @@ import { Header } from "./share/components/Header";
 import { MyPage } from "./my/pages/MyPage";
 import LoginPage from "./auth/pages/LoginPage";
 import { RegisterProfilePage } from "./auth/pages/RegisterProfilePage";
+import { EditPage } from "./edit/pages/EditPage";
 
 function App() {
   return (
@@ -26,6 +27,8 @@ function App() {
 
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterProfilePage />} />
+
+          <Route path="/edit" element={<EditPage />} />
         </Routes>
       </main>
     </div>
