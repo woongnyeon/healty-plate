@@ -6,6 +6,8 @@ import { LatestPage } from "./recipe/pages/LatestPage";
 import { RecipeBookPage } from "./recipe/pages/RecipeBookPage";
 import { Header } from "./share/components/Header";
 import { MyPage } from "./my/pages/MyPage";
+import LoginPage from "./auth/pages/LoginPage";
+import { RegisterProfilePage } from "./auth/pages/RegisterProfilePage";
 
 function App() {
   return (
@@ -20,7 +22,10 @@ function App() {
             <Route path="/book" element={<RecipeBookPage />} />
           </Route>
 
-          <Route path="my" element={<MyPage />} />
+          <Route path="/my" element={<MyPage />} />
+
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterProfilePage />} />
         </Routes>
       </main>
     </div>
