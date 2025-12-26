@@ -78,13 +78,11 @@ public class AuthService {
     ) {
         User user = getUserFromRefreshToken(refreshTokenValue);
 
-        // 프로필 이미지 업로드 (있을 경우)
         String profileImageUrl = null;
         if (profileImage != null && !profileImage.isEmpty()) {
             profileImageUrl = s3FileUploadService.uploadProfileImage(profileImage, user.getId());
         }
 
-        // 프로필 업데이트
         user.updateProfile(nickname, profileImageUrl, introduction);
         userRepository.save(user);
 
