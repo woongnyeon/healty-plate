@@ -46,7 +46,7 @@ public class KakaoOAuth2UserInfo implements OAuth2UserInfo {
         if (obj instanceof Map) {
             return (Map<String, Object>) obj;
         } else {
-            throw new IllegalArgumentException("Invalid kakao_account structure가 카카오 Oauth 응답에 존재하지 않습니다.");
+            throw new IllegalArgumentException("카카오 OAuth 응답 구조가 올바르지 않습니다.");
         }
     }
 }
