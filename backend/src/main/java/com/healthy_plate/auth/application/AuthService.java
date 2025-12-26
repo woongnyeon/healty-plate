@@ -3,15 +3,16 @@ package com.healthy_plate.auth.application;
 import com.healthy_plate.auth.domain.model.JwtTokenProvider;
 import com.healthy_plate.auth.domain.model.RefreshToken;
 import com.healthy_plate.auth.domain.repository.RefreshTokenRepository;
-import com.healthy_plate.auth.presentation.dto.UpdateUserProfileRequest;
 import com.healthy_plate.shared.error.exception.AuthenticationErrorCode;
 import com.healthy_plate.shared.error.exception.BusinessErrorCode;
 import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
+import com.healthy_plate.shared.s3.S3FileUploadService;
 import com.healthy_plate.user.domain.model.User;
 import com.healthy_plate.user.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +21,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
+    private final S3FileUploadService s3FileUploadService;
 
     @Transactional
     public String generateAccessToken(final String refreshTokenValue) {
@@ -68,9 +70,22 @@ public class AuthService {
     }
 
     @Transactional
-    public String registerNickname(final String refreshTokenValue, final UpdateUserProfileRequest request) {
+    public String registerUserInfo(
+        final String refreshTokenValue,
+        final String nickname,
+        final MultipartFile profileImage,
+        final String introduction
+    ) {
         User user = getUserFromRefreshToken(refreshTokenValue);
-        user.updateProfile(request.nickname(),request.profileImageUrl(),request.introduction());
+
+        // 프로필 이미지 업로드 (있을 경우)
+        String profileImageUrl = null;
+        if (profileImage != null && !profileImage.isEmpty()) {
+            profileImageUrl = s3FileUploadService.uploadProfileImage(profileImage, user.getId());
+        }
+
+        // 프로필 업데이트
+        user.updateProfile(nickname, profileImageUrl, introduction);
         userRepository.save(user);
 
         return jwtTokenProvider.generateAccessToken(
