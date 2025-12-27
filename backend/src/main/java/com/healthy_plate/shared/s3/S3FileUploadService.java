@@ -36,14 +36,14 @@ public class S3FileUploadService {
 
 
     //Presigned URL을 생성합니다.
-    public PresignedUrlResponse getPreSignedUrl(final String userId) {
+    public PresignedUrlResponse getPreSignedUrl(final String userId, final AllowedImageType imageType) {
         final String hashedPrefix = HashConverter.convertToHash(userId);
-        final String key = profileFolder + hashedPrefix + "/" + UUID.randomUUID() + ".jpg";
+        final String key = profileFolder + hashedPrefix + "/" + UUID.randomUUID() + "." + imageType.getExtension();
 
         final PutObjectRequest putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
             .key(key)
-            .contentType("image/jpeg")
+            .contentType(imageType.getContentType())
             .build();
 
         final PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()

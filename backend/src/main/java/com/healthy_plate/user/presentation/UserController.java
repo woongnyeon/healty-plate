@@ -1,5 +1,7 @@
 package com.healthy_plate.user.presentation;
 
+import com.healthy_plate.shared.s3.AllowedImageType;
+import com.healthy_plate.shared.s3.PresignedUrlRequest;
 import com.healthy_plate.shared.s3.PresignedUrlResponse;
 import com.healthy_plate.shared.s3.S3FileUploadService;
 import com.healthy_plate.user.application.UserService;
@@ -40,11 +42,15 @@ public class UserController implements SwaggerUserController {
 
     @PostMapping("/profile-image/presigned-url")
     public ResponseEntity<PresignedUrlResponse> getPresignedUrl(
-        @AuthenticationPrincipal final Long userId
+        @AuthenticationPrincipal final Long userId,
+        @Valid @RequestBody final PresignedUrlRequest request
     ) {
-        return ResponseEntity.ok(
-            s3FileUploadService.getPreSignedUrl(String.valueOf(userId))
+        final PresignedUrlResponse response = s3FileUploadService.getPreSignedUrl(
+            String.valueOf(userId),
+            AllowedImageType.fromContentType(request.contentType())
         );
+
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/profile")

@@ -3,6 +3,7 @@ package com.healthy_plate.auth.presentation;
 import com.healthy_plate.auth.presentation.dto.TokenResponse;
 import com.healthy_plate.auth.presentation.dto.RegisterUserProfileRequest;
 import com.healthy_plate.shared.error.ErrorResponse;
+import com.healthy_plate.shared.s3.PresignedUrlRequest;
 import com.healthy_plate.shared.s3.PresignedUrlResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -53,10 +54,20 @@ public interface SwaggerAuthController {
         description = """
             회원가입 시 프로필 이미지를 업로드하기 위한 Presigned URL을 생성합니다.
 
+            **요청 형식:**
+            - Content-Type: application/json
+            - Body: { "contentType": "image/jpeg" }
+
+            **지원하는 이미지 형식:**
+            - JPEG (image/jpeg)
+            - PNG (image/png)
+            - WEBP (image/webp)
+
             **사용 순서:**
-            1. 이 API를 호출하여 presignedUrl과 fileUrl을 받습니다
-            2. presignedUrl로 이미지를 S3에 직접 PUT 업로드합니다
-            3. PATCH /api/auth/register 호출 시 fileUrl을 profileImageUrl에 포함합니다
+            1. 프론트엔드에서 파일 선택 시 file.type으로 contentType 가져오기
+            2. 이 API를 JSON으로 호출하여 presignedUrl과 fileUrl을 받습니다
+            3. presignedUrl로 이미지를 S3에 직접 PUT 업로드합니다
+            4. PATCH /api/auth/register 호출 시 fileUrl을 profileImageUrl에 포함합니다
 
             **인증:** refresh_token 쿠키 사용 (회원가입 전이므로 accessToken 없음)
             """,
@@ -69,6 +80,13 @@ public interface SwaggerAuthController {
                 )
             ),
             @ApiResponse(
+                responseCode = "400",
+                description = "잘못된 요청 (지원하지 않는 파일 형식, contentType 누락 등)",
+                content = @Content(
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            ),
+            @ApiResponse(
                 responseCode = "401",
                 description = "유효하지 않은 리프레시 토큰",
                 content = @Content(
@@ -77,7 +95,10 @@ public interface SwaggerAuthController {
             )
         }
     )
-    ResponseEntity<PresignedUrlResponse> getPresignedUrl(HttpServletRequest httpRequest);
+    ResponseEntity<PresignedUrlResponse> getPresignedUrl(
+        PresignedUrlRequest request,
+        HttpServletRequest httpRequest
+    );
 
     @Operation(
         summary = "프로필 등록 (회원가입 완료)",

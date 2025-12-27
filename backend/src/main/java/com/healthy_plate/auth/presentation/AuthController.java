@@ -5,6 +5,8 @@ import com.healthy_plate.auth.domain.model.JwtProperties;
 import com.healthy_plate.auth.infrastructure.util.CookieUtil;
 import com.healthy_plate.auth.presentation.dto.RegisterUserProfileRequest;
 import com.healthy_plate.auth.presentation.dto.TokenResponse;
+import com.healthy_plate.shared.s3.AllowedImageType;
+import com.healthy_plate.shared.s3.PresignedUrlRequest;
 import com.healthy_plate.shared.s3.PresignedUrlResponse;
 import com.healthy_plate.shared.s3.S3FileUploadService;
 import com.healthy_plate.user.domain.model.User;
@@ -48,11 +50,17 @@ public class AuthController implements SwaggerAuthController {
 
     //회원가입 용
     @PostMapping("/profile-image/presigned-url")
-    public ResponseEntity<PresignedUrlResponse> getPresignedUrl(final HttpServletRequest httpRequest) {
+    public ResponseEntity<PresignedUrlResponse> getPresignedUrl(
+        @Valid @RequestBody final PresignedUrlRequest request,
+        final HttpServletRequest httpRequest
+    ) {
         final String refreshToken = CookieUtil.findRefreshTokenWithCookie(httpRequest.getCookies());
         final User user = authService.getUserFromRefreshToken(refreshToken);
 
-        final PresignedUrlResponse response = s3FileUploadService.getPreSignedUrl(String.valueOf(user.getId()));
+        final PresignedUrlResponse response = s3FileUploadService.getPreSignedUrl(
+            String.valueOf(user.getId()),
+            AllowedImageType.fromContentType(request.contentType())
+        );
 
         return ResponseEntity.ok(response);
     }
