@@ -1,7 +1,6 @@
 package com.healthy_plate.user.domain.model;
 
 import com.healthy_plate.auth.domain.model.OAuth2Provider;
-import com.healthy_plate.shared.domain.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
@@ -12,18 +11,23 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import jakarta.persistence.EntityListeners;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(
     name = "users",
     uniqueConstraints = @UniqueConstraint(columnNames = {"provider", "provider_id"})
 )
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,6 +50,12 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private UserRole role;
 
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    private LocalDateTime lastLoginAt;
+
     public User(
         final Email email,
         final UserProfile profile,
@@ -64,11 +74,15 @@ public class User extends BaseEntity {
         if (this.profile == null) {
             this.profile = UserProfile.createEmpty();
         }
-        this.profile.updateNickname(nickname,profileImageUrl,introduction);
+        this.profile.updateNickname(nickname, profileImageUrl, introduction);
     }
 
     public boolean isFirstLogin() {
         return profile == null || !this.profile.isNicknameSet();
+    }
+
+    public void updateLastLoginAt() {
+        this.lastLoginAt = LocalDateTime.now();
     }
 
 }

@@ -50,6 +50,9 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         final User user = userRepository.findById(oauth2User.getUserId())
             .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
+        user.updateLastLoginAt();
+        userRepository.save(user);
+
         final String refreshToken = jwtTokenProvider.generateRefreshToken(oauth2User.getUserId());
 
         refreshTokenService.saveRefreshToken(oauth2User.getUserId(), refreshToken, jwtProperties.refreshTokenExpiration());
