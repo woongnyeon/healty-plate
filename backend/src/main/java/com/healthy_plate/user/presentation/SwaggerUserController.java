@@ -70,18 +70,23 @@ public interface SwaggerUserController {
 
             **요청 형식:**
             - Content-Type: application/json
-            - Body: { "contentType": "image/jpeg" }
+            - Body: { "contentType": "image/jpeg", "fileSize": 2097152 }
 
             **지원하는 이미지 형식:**
             - JPEG (image/jpeg)
             - PNG (image/png)
             - WEBP (image/webp)
 
+            **파일 크기 제한:**
+            - 최대 5MB (5,242,880 bytes)
+            - 프론트엔드와 백엔드 모두에서 검증
+
             **사용 순서:**
-            1. 프론트엔드에서 파일 선택 시 file.type으로 contentType 가져오기
-            2. 이 API를 JSON으로 호출하여 presignedUrl과 fileUrl을 받습니다
-            3. presignedUrl로 이미지를 S3에 직접 PUT 업로드합니다
-            4. PATCH /api/users/profile 호출 시 fileUrl을 profileImageUrl에 포함합니다
+            1. 프론트엔드에서 파일 선택 시 file.type과 file.size 가져오기
+            2. 프론트엔드에서 파일 크기 체크 (5MB 이하인지 확인)
+            3. 이 API를 JSON으로 호출하여 presignedUrl과 fileUrl을 받습니다
+            4. presignedUrl로 이미지를 S3에 직접 PUT 업로드합니다
+            5. PATCH /api/users/profile 호출 시 fileUrl을 profileImageUrl에 포함합니다
 
             **인증:** Bearer accessToken 필요 (로그인 후)
             """,
@@ -96,7 +101,7 @@ public interface SwaggerUserController {
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "잘못된 요청 (지원하지 않는 파일 형식, contentType 누락 등)",
+                description = "잘못된 요청 (지원하지 않는 파일 형식, 파일 크기 초과, contentType/fileSize 누락 등)",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
