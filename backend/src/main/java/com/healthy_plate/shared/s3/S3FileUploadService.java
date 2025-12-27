@@ -1,5 +1,7 @@
 package com.healthy_plate.shared.s3;
 
+import com.healthy_plate.shared.error.exception.S3ErrorCode;
+import com.healthy_plate.shared.error.exception.S3Exception;
 import com.healthy_plate.shared.util.HashConverter;
 import java.time.Duration;
 import java.util.UUID;
@@ -36,7 +38,9 @@ public class S3FileUploadService {
 
 
     //Presigned URL을 생성합니다.
-    public PresignedUrlResponse getPreSignedUrl(final String userId, final AllowedImageType imageType) {
+    public PresignedUrlResponse getPreSignedUrl(final String userId, final AllowedImageType imageType, final Long fileSize) {
+        validateFile(fileSize);
+
         final String hashedPrefix = HashConverter.convertToHash(userId);
         final String key = profileFolder + hashedPrefix + "/" + UUID.randomUUID() + "." + imageType.getExtension();
 
@@ -59,8 +63,8 @@ public class S3FileUploadService {
         return new PresignedUrlResponse(presignedRequest.url().toString(), fileUrl);
     }
 
-    //S3에서 파일을 삭제합니다.
 
+    //S3에서 파일을 삭제합니다.
     public void deleteFile(final String fileUrl) {
         if (fileUrl == null || fileUrl.isBlank()) {
             return;
@@ -77,8 +81,8 @@ public class S3FileUploadService {
             log.warn("Failed to delete file from S3: {}", fileUrl, e);
         }
     }
-    //URL에서 S3 key 추출
 
+    //URL에서 S3 key 추출
     private String extractKeyFromUrl(final String fileUrl) {
         // https://bucket.s3.region.amazonaws.com/key 형식에서 key 추출
         final String prefix = String.format("https://%s.s3.%s.amazonaws.com/", bucketName, region);
@@ -86,5 +90,11 @@ public class S3FileUploadService {
             return fileUrl.substring(prefix.length());
         }
         throw new IllegalArgumentException("유효하지 않은 S3 URL입니다.");
+    }
+
+    private void validateFile(final Long fileSize) {
+        if (fileSize > MAX_FILE_SIZE) {
+            throw new S3Exception(S3ErrorCode.FILE_SIZE_EXCEEDED);
+        }
     }
 }

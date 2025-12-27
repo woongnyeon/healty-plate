@@ -59,7 +59,8 @@ public class AuthController implements SwaggerAuthController {
 
         final PresignedUrlResponse response = s3FileUploadService.getPreSignedUrl(
             String.valueOf(user.getId()),
-            AllowedImageType.fromContentType(request.contentType())
+            AllowedImageType.fromContentType(request.contentType()),
+            request.fileSize()
         );
 
         return ResponseEntity.ok(response);
