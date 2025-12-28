@@ -1,0 +1,20 @@
+import { HashTagChip } from "./HashTagChip";
+import { TagInput } from "./TagInput";
+
+interface TagEditorProps {
+  tags: string[];
+  onAdd: (tag: string) => void;
+  onRemove: (tag: string) => void;
+}
+
+export const TagEditor = ({ tags, onAdd, onRemove }: TagEditorProps) => {
+  return (
+    <div className="mt-10 flex flex-wrap items-center gap-2">
+      {tags.map((tag) => (
+        <HashTagChip key={tag} label={tag} onRemove={() => onRemove(tag)} />
+      ))}
+
+      <TagInput onSubmit={onAdd} />
+    </div>
+  );
+};
