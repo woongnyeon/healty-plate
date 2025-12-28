@@ -6,7 +6,7 @@ export const WriteFloatingButton = () => {
 
   return (
     <button
-      onClick={() => navigate("/write")}
+      onClick={() => navigate("/edit")}
       className="
         fixed
         right-[45px]
