@@ -12,7 +12,7 @@ import net.minidev.json.annotate.JsonIgnore;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserProfile {
 
-    @Column
+    @Column(unique = true)
     private String nickname;
 
     @Column(name = "profile_image_url")
@@ -40,7 +40,7 @@ public class UserProfile {
         return profile;
     }
 
-    public void updateNickname(final String nickname,final String profileImageUrl,final String introduction) {
+    public void updateNickname(final String nickname, final String profileImageUrl, final String introduction) {
         validateName(nickname);
         validateIntroduction(introduction);
         this.nickname = nickname.trim();

@@ -4,7 +4,8 @@ import org.springframework.http.HttpStatus;
 
 public enum BusinessErrorCode implements ErrorCode {
 
-    USER_NOT_FOUND("B101", "사용자를 찾을 수 없습니다", HttpStatus.NOT_FOUND);
+    USER_NOT_FOUND("B101", "사용자를 찾을 수 없습니다", HttpStatus.NOT_FOUND),
+    INACTIVE_USER_CANNOT_POST("B102", "비활성화된 유저는 게시글을 작성할 수 없습니다.", HttpStatus.FORBIDDEN);
 
     private final String code;
     private final String message;

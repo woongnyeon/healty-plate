@@ -4,6 +4,7 @@ import com.healthy_plate.auth.domain.model.OAuth2Provider;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
@@ -16,7 +17,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import jakarta.persistence.EntityListeners;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -50,6 +50,9 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
+    @Column(nullable = false)
+    private boolean is_active;
+
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -61,13 +64,15 @@ public class User {
         final UserProfile profile,
         final OAuth2Provider provider,
         final String providerId,
-        final UserRole role
+        final UserRole role,
+        final boolean is_active
     ) {
         this.email = email;
         this.profile = profile;
         this.provider = provider;
         this.providerId = providerId;
         this.role = role;
+        this.is_active = is_active;
     }
 
     public void updateProfile(final String nickname, final String profileImageUrl, final String introduction) {
