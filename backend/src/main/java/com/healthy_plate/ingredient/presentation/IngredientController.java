@@ -1,14 +1,16 @@
 package com.healthy_plate.ingredient.presentation;
 
+import com.healthy_plate.ingredient.application.IngredientService;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
-import com.healthy_plate.ingredient.domain.service.IngredientService;
 import com.healthy_plate.ingredient.presentation.dto.IngredientRequest;
 import com.healthy_plate.ingredient.presentation.dto.IngredientResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,5 +43,11 @@ public class IngredientController {
             .map(IngredientResponse::from)
             .toList();
         return ResponseEntity.ok(responses);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") final String id) {
+        ingredientService.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 }

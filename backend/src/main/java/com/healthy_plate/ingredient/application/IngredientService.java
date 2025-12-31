@@ -1,4 +1,4 @@
-package com.healthy_plate.ingredient.domain.service;
+package com.healthy_plate.ingredient.application;
 
 import com.healthy_plate.ingredient.domain.model.Ingredient;
 import com.healthy_plate.ingredient.domain.model.RegistrationType;
@@ -8,6 +8,7 @@ import com.healthy_plate.shared.error.exception.BusinessException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,13 @@ public class IngredientService {
         ingredientRepository.save(ingredient);
     }
 
+    @Transactional(readOnly = true)
     public List<Ingredient> searchIngredientsByName(final String name) {
         return ingredientRepository.findByNameContaining(name);
+    }
+
+    @Transactional
+    public void deleteById(final String id) {
+        ingredientRepository.deleteById(id);
     }
 }
