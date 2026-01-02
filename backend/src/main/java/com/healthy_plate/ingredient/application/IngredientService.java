@@ -1,7 +1,11 @@
 package com.healthy_plate.ingredient.application;
 
+import com.healthy_plate.ingredient.domain.model.Calorie;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
+import com.healthy_plate.ingredient.domain.model.IngredientName;
+import com.healthy_plate.ingredient.domain.model.IngredientUnit;
 import com.healthy_plate.ingredient.domain.model.RegistrationType;
+import com.healthy_plate.ingredient.domain.model.ServingSize;
 import com.healthy_plate.ingredient.domain.repository.IngredientRepository;
 import com.healthy_plate.shared.error.exception.BusinessErrorCode;
 import com.healthy_plate.shared.error.exception.BusinessException;
@@ -27,11 +31,11 @@ public class IngredientService {
             throw new BusinessException(BusinessErrorCode.EXIST_INGREDIENT);
         }
         Ingredient ingredient = new Ingredient(
-            name,
+            IngredientName.of(name),
             nameEn,
-            calorie,
-            servingSize,
-            unit,
+            Calorie.of(calorie),
+            ServingSize.of(servingSize),
+            IngredientUnit.fromUnit(unit),
             RegistrationType.SYSTEM,
             true,
             null
@@ -55,12 +59,13 @@ public class IngredientService {
     ) {
         Ingredient ingredient = ingredientRepository.findById(id)
             .orElseThrow(() -> new BusinessException(BusinessErrorCode.INGREDIENT_NOT_FOUND));
+
         ingredient.updateIngredient(
-            name,
+            name != null ? IngredientName.of(name) : null,
             nameEn,
-            servingSize,
-            unit,
-            calorie
+            servingSize != null ? ServingSize.of(servingSize) : null,
+            unit != null ? IngredientUnit.fromUnit(unit) : null,
+            calorie != null ? Calorie.of(calorie) : null
         );
     }
 

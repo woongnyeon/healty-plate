@@ -3,6 +3,7 @@ package com.healthy_plate.ingredient.domain.model;
 import com.healthy_plate.shared.domain.BaseEntity;
 import com.healthy_plate.user.domain.model.User;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,17 +29,18 @@ public class Ingredient extends BaseEntity {
     @Column(name = "ingredient_id")
     private Long id;
 
-    @Column(length = 100, nullable = false)
-    private String name;
+    @Embedded
+    private IngredientName name;
 
     @Column(name = "name_en", length = 100)
     private String nameEn;
 
-    @Column(name = "calorie")
-    private int calorie;
+    @Embedded
+    private Calorie calorie;
 
-    @Column(name = "serving_size")
-    private Double servingSize;
+    @Embedded
+    private ServingSize servingSize;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "unit", length = 10)
@@ -58,11 +60,11 @@ public class Ingredient extends BaseEntity {
     private Boolean isVerified = false;
 
     public Ingredient(
-        final String name,
+        final IngredientName name,
         final String nameEn,
-        final int calorie,
-        final Double servingSize,
-        final String unit,
+        final Calorie calorie,
+        final ServingSize servingSize,
+        final IngredientUnit unit,
         final RegistrationType registrationType,
         final boolean isVerified,
         final User registeredBy
@@ -71,35 +73,38 @@ public class Ingredient extends BaseEntity {
         this.nameEn = nameEn;
         this.calorie = calorie;
         this.servingSize = servingSize;
-        this.unit = IngredientUnit.fromUnit(unit);
+        this.unit = unit;
         this.registrationType = registrationType;
         this.registeredBy = registeredBy;
         this.isVerified = false;
     }
 
     // Batch 로딩용 정적 팩토리 메서드
-    public static Ingredient createSystemIngredient(final String name, final int calorie, final Double servingSize, final IngredientUnit unit) {
-        Ingredient ingredient = new Ingredient();
-        ingredient.name = name;
-        ingredient.nameEn = null;
-        ingredient.calorie = calorie;
-        ingredient.servingSize = servingSize;
-        ingredient.unit = unit;
-        ingredient.registrationType = RegistrationType.SYSTEM;
-        ingredient.registeredBy = null;
-        ingredient.isVerified = true;
-        return ingredient;
+    public static Ingredient createSystemIngredient(
+        final IngredientName name,
+        final Calorie calorie,
+        final ServingSize servingSize,
+        final IngredientUnit unit
+    ) {
+        return new Ingredient(
+            name,
+            null,
+            calorie,
+            servingSize,
+            unit,
+            RegistrationType.SYSTEM,
+            true,
+            null
+        );
     }
 
     public void updateIngredient(
-        final String name,
+        final IngredientName name,
         final String nameEn,
-        final Double servingSize,
-        final String unit,
-        final Integer calorie
+        final ServingSize servingSize,
+        final IngredientUnit unit,
+        final Calorie calorie
     ) {
-        validateUpdateParameters(name, servingSize, calorie);
-
         if (name != null) {
             this.name = name;
         }
@@ -110,23 +115,10 @@ public class Ingredient extends BaseEntity {
             this.servingSize = servingSize;
         }
         if (unit != null) {
-            this.unit = IngredientUnit.fromUnit(unit);
+            this.unit = unit;
         }
         if (calorie != null) {
             this.calorie = calorie;
-        }
-
-    }
-
-    private void validateUpdateParameters(final String name, final Double servingSize, final Integer calorie) {
-        if (name != null && name.isBlank()) {
-            throw new IllegalArgumentException("식재료명은 공백일 수 없습니다.");
-        }
-        if (servingSize != null && servingSize <= 0) {
-            throw new IllegalArgumentException("1회 제공량은 0보다 커야 합니다.");
-        }
-        if (calorie != null && calorie < 0) {
-            throw new IllegalArgumentException("칼로리는 음수일 수 없습니다.");
         }
     }
 

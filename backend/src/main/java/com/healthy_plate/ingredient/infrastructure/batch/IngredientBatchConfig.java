@@ -1,8 +1,11 @@
 package com.healthy_plate.ingredient.infrastructure.batch;
 
+import com.healthy_plate.ingredient.domain.model.Calorie;
 import com.healthy_plate.ingredient.domain.model.CsvIngredient;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
+import com.healthy_plate.ingredient.domain.model.IngredientName;
 import com.healthy_plate.ingredient.domain.model.IngredientUnit;
+import com.healthy_plate.ingredient.domain.model.ServingSize;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +94,7 @@ public class IngredientBatchConfig {
                 }
 
                 // 칼로리 파싱
-                int calorie = 0;
+                Integer calorie = 0;
                 try {
                     String energyStr = csvRow.calorie();
                     if (energyStr != null && !energyStr.trim().isEmpty()) {
@@ -101,8 +104,13 @@ public class IngredientBatchConfig {
                     log.warn("칼로리 파싱 실패 ({}): {}, 기본값 0으로 설정", foodName, csvRow.calorie());
                 }
 
+                // Value Object 생성
+                IngredientName ingredientName = IngredientName.of(foodName.trim());
+                Calorie calorieVO = Calorie.of(calorie);
+                ServingSize servingSizeVO = ServingSize.of(Double.valueOf(servingSize.trim()));
+
                 // Ingredient 생성
-                return Ingredient.createSystemIngredient(foodName.trim(), calorie, Double.valueOf(servingSize.trim()), unit);
+                return Ingredient.createSystemIngredient(ingredientName, calorieVO, servingSizeVO, unit);
 
             } catch (Exception e) {
                 log.error("데이터 처리 중 오류 발생: {}", csvRow, e);
