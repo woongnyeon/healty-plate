@@ -1,5 +1,5 @@
-import { useSearchIngredient } from "../../../hooks/useSearchIngredient";
-import { useEditQuery } from "../../../hooks/useEditQuery";
+import { useSearchIngredient } from "../../../hooks/util/useSearchIngredient";
+import { useEditQuery } from "../../../hooks/query/useEditQuery";
 import { useRecipeEditorStore } from "../../../store/EditStore";
 
 import { IngredientCard } from "./IngredientCard";
