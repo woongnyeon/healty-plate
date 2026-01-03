@@ -2,7 +2,9 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import type { Ingredient } from "../types/Ingredient";
 
-type EditorIngredient = Ingredient; // 그대로 써도 되고, 필요하면 에디터용 타입 따로 만들어도 됨
+type EditorIngredient = Ingredient;
+
+const LOCAL_STORAGE_KEY = "recipe-editor-draft";
 
 interface RecipeEditorState {
   // ===== Editor(Client) State =====
@@ -27,10 +29,14 @@ interface RecipeEditorState {
 
   setContentHtml: (html: string) => void;
 
-  // 편집 상태 초기화(페이지 나갈 때/새 글 작성 등)
+  // 임시 저장 (Local Storage)
+  saveToLocalStorage: () => void;
+  loadFromLocalStorage: () => boolean; // 성공 여부 반환
+
+  // 편집 상태 초기화
   reset: () => void;
 
-  // (선택) 서버에서 가져온 "게시글 수정 초기값"을 store에 주입할 때 사용
+  // 서버 데이터 등 외부 데이터 주입
   hydrate: (payload: {
     title?: string;
     tags?: string[];
@@ -51,7 +57,7 @@ const initialState = {
 };
 
 export const useRecipeEditorStore = create<RecipeEditorState>()(
-  devtools((set) => ({
+  devtools((set, get) => ({
     ...initialState,
 
     setTitle: (title) => set({ title }),
@@ -99,6 +105,34 @@ export const useRecipeEditorStore = create<RecipeEditorState>()(
       }),
 
     setContentHtml: (contentHtml) => set({ contentHtml }),
+
+    saveToLocalStorage: () => {
+      const { title, tags, ingredients, contentHtml } = get();
+      const draft = { title, tags, ingredients, contentHtml };
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft));
+      alert("임시 저장되었습니다.");
+    },
+
+    loadFromLocalStorage: () => {
+      const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (!stored) return false;
+
+      try {
+        const parsed = JSON.parse(stored);
+        set((state) => ({
+          ...state,
+          title: parsed.title || "",
+          tags: parsed.tags || [],
+          ingredients: parsed.ingredients || [],
+          contentHtml: parsed.contentHtml || "",
+          totalKcal: computeTotalKcal(parsed.ingredients || []),
+        }));
+        return true;
+      } catch (e) {
+        console.error("Failed to load draft", e);
+        return false;
+      }
+    },
 
     reset: () => set({ ...initialState }),
 
