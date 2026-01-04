@@ -14,7 +14,14 @@ export const TagEditor = ({ tags, onAdd, onRemove }: TagEditorProps) => {
         <HashTagChip key={tag} label={tag} onRemove={() => onRemove(tag)} />
       ))}
 
-      <TagInput onSubmit={onAdd} />
+      <TagInput
+        onSubmit={onAdd}
+        onBackspace={() => {
+          if (tags.length > 0) {
+            onRemove(tags[tags.length - 1]);
+          }
+        }}
+      />
     </div>
   );
 };
