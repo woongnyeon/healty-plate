@@ -1,5 +1,4 @@
 import { useEffect, useState, useMemo, useRef } from "react";
-import type { Ingredient } from "../../types/Ingredient";
 
 type IngredientSearchItem = {
   id: number;
@@ -26,7 +25,7 @@ export const useIngredient = ({
     onManualAdd,
 }: IngredientListProps) => {
     const [activeIndex, setActiveIndex] = useState<number>(0);
-    const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+    
 
     useEffect(() => {
         if (!isOpen) return;
@@ -40,30 +39,33 @@ export const useIngredient = ({
     const [amount, setAmount] = useState<string>("");
     const [kcal, setKcal] = useState<string>("");
     
-    useEffect(() => {
-    if (!isOpen) return;
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (!isOpen) return;
 
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose?.();
+      if (e.key === "Escape") {
+        onClose?.();
+        return;
+      }
 
       if (e.key === "ArrowDown") {
         e.preventDefault();
         setActiveIndex((prev) => Math.min(prev + 1, sliced.length - 1));
+        return;
       }
 
       if (e.key === "ArrowUp") {
         e.preventDefault();
         setActiveIndex((prev) => Math.max(prev - 1, 0));
+        return;
       }
 
       if (e.key === "Enter") {
+        e.preventDefault(); 
         if (!sliced.length) return;
         onSelect(sliced[activeIndex]);
+        return;
       }
     };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [isOpen, sliced, activeIndex, onSelect, onClose]);
 
   const handleManualAdd = () => {
     const parsedAmount = Number(amount);
@@ -85,9 +87,7 @@ export const useIngredient = ({
     
     return {
         activeIndex,
-        ingredients,
         wrapperRef,
-        setIngredients,
         sliced,
         name,
         amount,
@@ -96,5 +96,7 @@ export const useIngredient = ({
         setAmount,
         setKcal,
         handleManualAdd,
+        onSelect,
+        handleKeyDown,
     }   
 }
