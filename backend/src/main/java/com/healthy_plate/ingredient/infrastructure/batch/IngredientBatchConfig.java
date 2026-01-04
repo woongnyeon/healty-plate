@@ -81,7 +81,6 @@ public class IngredientBatchConfig {
                 }
 
                 // 영양성분함량기준량
-                String servingSize = csvRow.servingSize();
                 String unitStr = csvRow.unit();
 
                 // 단위 변환
@@ -98,16 +97,26 @@ public class IngredientBatchConfig {
                 try {
                     String energyStr = csvRow.calorie();
                     if (energyStr != null && !energyStr.trim().isEmpty()) {
-                        calorie = (int) Double.parseDouble(energyStr.trim());
+                        calorie = Integer.parseInt(energyStr.trim());
                     }
                 } catch (NumberFormatException e) {
                     log.warn("칼로리 파싱 실패 ({}): {}, 기본값 0으로 설정", foodName, csvRow.calorie());
                 }
 
+                Double servingSize = 0.0;
+                try {
+                    String servingSizeStr = csvRow.servingSize();
+                    if (servingSizeStr != null && !servingSizeStr.trim().isEmpty()) {
+                        servingSize = Double.parseDouble(servingSizeStr.trim());
+                    }
+                } catch (NumberFormatException e) {
+                    log.warn("제공량 파싱 실패 ({}): {}, 기본값 0으로 설정", foodName, csvRow.servingSize());
+                }
+
                 // Value Object 생성
                 IngredientName ingredientName = IngredientName.of(foodName.trim());
                 Calorie calorieVO = Calorie.of(calorie);
-                ServingSize servingSizeVO = ServingSize.of(Double.valueOf(servingSize.trim()));
+                ServingSize servingSizeVO = ServingSize.of(servingSize);
 
                 // Ingredient 생성
                 return Ingredient.createSystemIngredient(ingredientName, calorieVO, servingSizeVO, unit);
