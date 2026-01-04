@@ -1,38 +1,49 @@
-import { useIngredient } from "../../../hooks/Ingredient/useIngredient";
+import type { RefObject } from "react";
 
-type IngredientSearchItem = {
+// 재료 검색 결과
+interface IngredientSearchItem {
   id: number;
   name: string;
   baseAmount?: number;
   baseKcal?: number;
 };
 
+// 재료 검색 리스트 props
 interface IngredientListProps {
   query: string;
   isOpen: boolean;
-  items: IngredientSearchItem[];
+    
+  // 상태
+  activeIndex: number;
+  sliced: IngredientSearchItem[];
+  wrapperRef: RefObject<HTMLDivElement | null>;
+  name: string;
+  amount: string;
+  kcal: string;
+  setName: (v: string) => void;
+  setAmount: (v: string) => void;
+  setKcal: (v: string) => void;
+  handleManualAdd: () => void;
+  
+  // 콜백
   onSelect: (item: IngredientSearchItem) => void;
-  onClose?: () => void;
-
-  onManualAdd: (payload: { name: string; amount: number; kcal: number }) => void;
 }
 
 export const IngredientList = ({
   query,
   isOpen,
-  items,
+  activeIndex,
+  sliced,
+  wrapperRef,
+  name,
+  amount,
+  kcal,
+  setName,
+  setAmount,
+  setKcal,
+  handleManualAdd,
   onSelect,
-  onClose,
-  onManualAdd,
 }: IngredientListProps) => {
-  const { activeIndex, sliced, wrapperRef, name, amount, kcal, setName, setAmount, setKcal, handleManualAdd } = useIngredient({
-    query,
-    isOpen,
-    items,
-    onSelect,
-    onClose,
-    onManualAdd,
-  });
 
   if (!isOpen) return null;
 

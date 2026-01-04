@@ -1,21 +1,46 @@
-import { useSearchIngredient } from "../../../hooks/util/useSearchIngredient";
-import { useEditQuery } from "../../../hooks/query/useEditQuery";
-import { useRecipeEditorStore } from "../../../store/EditStore";
-
 import { IngredientCard } from "./IngredientCard";
 import { IngredientList } from "./IngredientList";
+import type { Ingredient } from "../../../types/Ingredient";
 
-export const IngredientEditor = () => {
-  const ingredients = useRecipeEditorStore((s) => s.ingredients);
-  const totalKcal = useRecipeEditorStore((s) => s.totalKcal);
-  const addIngredient = useRecipeEditorStore((s) => s.addIngredient);
-  const removeIngredient = useRecipeEditorStore((s) => s.removeIngredient);
-  const { ingredientQuery } = useEditQuery();
-  const { data: allIngredients = [] } = ingredientQuery();
+interface UseIngredientReturn {
+  activeIndex: number;
+  wrapperRef: React.RefObject<HTMLDivElement | null>;
+  sliced: any[];
+  name: string;
+  amount: string;
+  kcal: string;
+  setName: (v: string) => void;
+  setAmount: (v: string) => void;
+  setKcal: (v: string) => void;
+  handleManualAdd: () => void;
+  onSelect: (item: any) => void;
+  handleKeyDown: (e: React.KeyboardEvent) => void;
+}
 
-  const { query, setQuery, results, isSearching } =
-    useSearchIngredient(allIngredients);
+interface IngredientEditorProps {
+  ingredients: Ingredient[];
+  totalKcal: number;
+  onRemove: (id: number) => void;
 
+  // 검색 입력 상태
+  searchValues: {
+    query: string;
+    setQuery: (q: string) => void;
+    isSearching: boolean;
+  };
+
+  // 재료 검색 리스트 props
+  ingredientListProps: UseIngredientReturn;
+}
+
+export const IngredientEditor = ({
+  ingredients,
+  totalKcal,
+  onRemove,
+  searchValues,
+  ingredientListProps,
+}: IngredientEditorProps) => {
+  const { query, setQuery, isSearching } = searchValues;
   const isListOpen = isSearching;
 
   return (
@@ -23,7 +48,7 @@ export const IngredientEditor = () => {
       <IngredientCard
         ingredients={ingredients}
         totalKcal={totalKcal}
-        onRemove={removeIngredient}
+        onRemove={onRemove}
       />
 
       <div className="mt-3">
@@ -32,6 +57,7 @@ export const IngredientEditor = () => {
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={ingredientListProps.handleKeyDown}
             placeholder="재료 검색"
             className="w-full text-sm outline-none"
           />
@@ -40,30 +66,8 @@ export const IngredientEditor = () => {
         <IngredientList
           query={query}
           isOpen={isListOpen}
-          items={results.map((r) => ({
-            id: Number(r.id),
-            name: r.name,
-            baseAmount: r.amount ?? 0,
-            baseKcal: r.kcal ?? 0,
-          }))}
-          onSelect={(item) => {
-            addIngredient({
-              id: Date.now(),
-              name: item.name,
-              amount: item.baseAmount ?? 0,
-              kcal: item.baseKcal ?? 0,
-            });
-            setQuery("");
-          }}
-          onClose={() => setQuery("")}
-          onManualAdd={({ name, amount, kcal }) => {
-            addIngredient({
-              id: Date.now(),
-              name,
-              amount,
-              kcal,
-            });
-          }}
+          // 리스트 컴포넌트로 로직 넘기기
+          {...ingredientListProps}
         />
       </div>
     </div>
