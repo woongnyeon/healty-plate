@@ -1,60 +1,38 @@
-import { useLayoutEffect, useRef } from "react";
+import type { RefObject } from "react";
 
 interface TitleEditorProps {
-    title: string;
-    onChangeTitle: (value: string) => void;
-
-    placeholder?: string;
-    allowNewLine: boolean;
-    maxLength?: number;
-    showCount?: boolean;
-    onEnter?: () => void;
+  title: string;
+  ref: RefObject<HTMLTextAreaElement | null>;
+  handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
+  currentLength: number;
+    
+  // Config props (optional, but mostly handled by hook now)
+  placeholder?: string;
+  maxLength?: number;
+  showCount?: boolean;
 }
 
-export const TitleEditor = ({title,
-  onChangeTitle,
+export const TitleEditor = ({
+  title,
+  ref: inputRef,
+  handleChange,
+  handleKeyDown,
+  currentLength,
   placeholder = "레시피 제목을 입력하세요",
-  allowNewLine = true,
   maxLength = 60,
   showCount = true,
-  onEnter,} : TitleEditorProps) => {
-
-    const ref = useRef<HTMLTextAreaElement | null>(null);
-
-    const autoResize = () => {
-        const el = ref.current;
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-    }
-
-    useLayoutEffect(() => {
-        autoResize();
-    }, [title]);
-
-    const handleChange = (v: string) => {
-    // 길이 제한
-    if (maxLength && v.length > maxLength) {
-      onChangeTitle(v.slice(0, maxLength));
-      return;
-    }
-    onChangeTitle(v);
-  };
-    return (
+}: TitleEditorProps) => {
+  return (
     <div className="mt-16">
       <textarea
-        ref={ref}
+        ref={inputRef}
         value={title}
-        onChange={(e) => handleChange(e.target.value)}
+        onChange={handleChange}
         placeholder={placeholder}
         rows={1}
         spellCheck={false}
-        onKeyDown={(e) => {
-          if (!allowNewLine && e.key === "Enter") {
-            e.preventDefault();
-            onEnter?.();
-          }
-        }}
+        onKeyDown={handleKeyDown}
         className="
           w-full resize-none overflow-hidden bg-transparent
           text-[44px] leading-[1.15] font-extrabold tracking-[-0.02em]
@@ -69,9 +47,9 @@ export const TitleEditor = ({title,
       {/* 글자수 */}
       {showCount && (
         <div className="mt-2 text-xs text-gray-300">
-          {title.length} / {maxLength}
+          {currentLength} / {maxLength}
         </div>
       )}
     </div>
   );
-}
+};
