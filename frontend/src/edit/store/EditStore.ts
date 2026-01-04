@@ -6,7 +6,7 @@ type EditorIngredient = Ingredient;
 
 const LOCAL_STORAGE_KEY = "recipe-editor-draft";
 
-interface RecipeEditorState {
+export interface RecipeEditorState {
   // ===== Editor(Client) State =====
   title: string;
   tags: string[];
