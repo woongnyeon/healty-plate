@@ -28,3 +28,21 @@ export interface Ingredient {
   unit: IngredientUnit;  // 단위 추가
   kcal: number;
 }
+
+export interface IngredientSearchItem {
+  id: number;
+  name: string;
+  baseAmount?: number;
+  baseKcal?: number;
+}
+
+
+export interface IngredientListProps {
+  query: string;
+  isOpen: boolean;
+  items: IngredientSearchItem[];
+  onSelect: (item: IngredientSearchItem) => void;
+  onClose?: () => void;
+  onManualAdd?: (payload: {name: string; amount: string; unit: IngredientUnit; kcal: string;}) => void;
+}
+
