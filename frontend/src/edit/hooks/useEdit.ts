@@ -29,6 +29,8 @@ export const useEdit = () => {
     removeIngredient,
     saveToLocalStorage,
     loadFromLocalStorage,
+    settings,
+    toggleSetting,
   } = useRecipeEditorStore(
     useShallow((state: RecipeEditorState) => ({
       tags: state.tags,
@@ -42,6 +44,8 @@ export const useEdit = () => {
       removeIngredient: state.removeIngredient,
       saveToLocalStorage: state.saveToLocalStorage,
       loadFromLocalStorage: state.loadFromLocalStorage,
+      settings: state.settings,
+      toggleSetting: state.toggleSetting,
     }))
   );
 
@@ -62,7 +66,7 @@ export const useEdit = () => {
         }
       }
     }
-  }, []);
+  }, [loadFromLocalStorage]);
 
   // 3. 에디터 설정
   const editor = useEditor({
@@ -93,8 +97,8 @@ export const useEdit = () => {
 
   // 콘텐츠 HTML -> 에디터 동기화 (Hydration 시에만 1회성)
   useEffect(() => {
-    if (editor && isHydratingRef.current) {
-        // 이미 Editor가 있고, Hydration 플래그가 켜져 있다면
+    if (editor && isHydratingRef.current && contentHtml) {
+        // 이미 Editor가 있고, Hydration 플래그가 켜져 있고, contentHtml이 있다면
         // 스토어의 contentHtml을 에디터에 주입
         editor.commands.setContent(contentHtml);
         // 플래그 끄기 (이후에는 에디터 -> 스토어 단방향)
@@ -132,20 +136,26 @@ export const useEdit = () => {
         id: Date.now(), // TODO: crypto.randomUUID()로 변경 권장 (숫자 ID 이슈 해결 후)
         name: item.name,
         amount: item.baseAmount ?? 0,
+        unit: "g", // 기본 단위 (추후 선택 가능하도록 개선 예정)
         kcal: item.baseKcal ?? 0,
       });
       searchValues.setQuery("");
     },
     onClose: () => searchValues.setQuery(""),
-    onManualAdd: ({ name, amount, kcal }) => {
+    onManualAdd: ({ name, amount, unit, kcal }) => {
       addIngredient({
         id: Date.now(), 
         name,
         amount,
+        unit, // 사용자가 선택한 단위 사용
         kcal,
       });
     },
   });
+
+  const handleToggleSetting = (key: keyof typeof settings) => {
+    toggleSetting(key);
+  }
 
   // 5. 페이지 액션
   const handleSaveDraft = () => {
@@ -180,10 +190,12 @@ export const useEdit = () => {
     ingredientProps: {
       ingredients,
       totalKcal,
+      settings,
       onRemove: removeIngredient,
       searchValues, // 입력창에 여전히 필요
       // 리스트 컴포넌트로 로직 넘기기
       ingredientListProps: ingredientListLogic,
+      onToggle: handleToggleSetting,
     },
 
     // 액션
