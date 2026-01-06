@@ -4,13 +4,11 @@ import { useEditApi } from "../api/useEditApi";
 
 export const useEditQuery = () => {
   const { fetchAllIngredients } = useEditApi();
-  const ingredientQuery = () => {
-    return useQuery<Ingredient[]>({
-      queryKey: ["ingredients", "all"],
-      queryFn: fetchAllIngredients,
-      staleTime: 1000 * 60 * 10,
-    });
-  };
+  const ingredientQuery = useQuery<Ingredient[]>({
+    queryKey: ["ingredients", "all"],
+    queryFn: fetchAllIngredients,
+    staleTime: 1000 * 60 * 10,
+  })
 
   return {
     ingredientQuery,
