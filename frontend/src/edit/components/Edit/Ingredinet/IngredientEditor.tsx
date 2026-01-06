@@ -1,6 +1,6 @@
 import { IngredientCard } from "./IngredientCard";
 import { IngredientList } from "./IngredientList";
-import type { Ingredient } from "../../../types/Ingredient";
+import type { Ingredient, IngredientUnit } from "../../../types/Ingredient";
 
 interface UseIngredientReturn {
   activeIndex: number;
@@ -8,9 +8,11 @@ interface UseIngredientReturn {
   sliced: any[];
   name: string;
   amount: string;
+  unit: IngredientUnit;
   kcal: string;
   setName: (v: string) => void;
   setAmount: (v: string) => void;
+  setUnit: (v: IngredientUnit) => void;
   setKcal: (v: string) => void;
   handleManualAdd: () => void;
   onSelect: (item: any) => void;
@@ -20,6 +22,10 @@ interface UseIngredientReturn {
 interface IngredientEditorProps {
   ingredients: Ingredient[];
   totalKcal: number;
+  settings: {
+    showIngredients: boolean;
+    showKcal: boolean;
+  };
   onRemove: (id: number) => void;
 
   // 검색 입력 상태
@@ -31,14 +37,19 @@ interface IngredientEditorProps {
 
   // 재료 검색 리스트 props
   ingredientListProps: UseIngredientReturn;
+
+  // 설정 토글 함수
+  onToggle: (key: "showIngredients" | "showKcal") => void;
 }
 
 export const IngredientEditor = ({
   ingredients,
   totalKcal,
+  settings,
   onRemove,
   searchValues,
   ingredientListProps,
+  onToggle,
 }: IngredientEditorProps) => {
   const { query, setQuery, isSearching } = searchValues;
   const isListOpen = isSearching;
@@ -48,12 +59,22 @@ export const IngredientEditor = ({
       <IngredientCard
         ingredients={ingredients}
         totalKcal={totalKcal}
+        settings={settings}
         onRemove={onRemove}
+        onToggle={onToggle}
       />
 
       <div className="mt-3">
         <div className="flex items-center gap-2 rounded-full bg-white px-4 py-3 shadow-sm ring-1 ring-gray-100">
-          <span className="text-gray-400">검색</span>
+          <span className="text-gray-400">
+            <svg
+            className="w-4 h-4 text-tertiary mr-2"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path d="M10 2a8 8 0 105.293 14.293l4.707 4.707 1.414-1.414-4.707-4.707A8 8 0 0010 2z" />
+          </svg>
+          </span>
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
