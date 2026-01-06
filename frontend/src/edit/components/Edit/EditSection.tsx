@@ -12,31 +12,36 @@ export const EditSection = () => {
   if (!editor) return null;
 
   return (
-    <section className="min-w-0">
-      <div className="sticky top-0 z-20 bg-white pt-2">
-        <div className="flex justify-center">
-          <EditToolBar editor={editor} />
+    <section className="relative flex h-full min-w-0 flex-col overflow-hidden">
+      {/* 스크롤 가능한 컨텐츠 영역 */}
+      <div className="flex-1 overflow-y-auto custom-scrollbar px-4 pb-32">
+        <div className="sticky top-0 z-20 bg-white/95 pb-4 pt-2 backdrop-blur-sm">
+          <div className="flex justify-center">
+            <EditToolBar editor={editor} />
+          </div>
+          <div className="mt-4 border-t border-gray-100" />
         </div>
-        <div className="mt-4 border-t border-gray-100" />
-      </div>
 
-      <TitleEditor {...titleProps} />
+        <TitleEditor {...titleProps} />
 
-      <TagEditor {...tagProps} />
+        <IngredientEditor {...ingredientProps} />
 
-      <IngredientEditor {...ingredientProps} />
-
-      <div className="mt-10 w-full max-w-[720px]">
-        <div className="max-h-[60vh] overflow-y-auto">
+        <div className="mt-20 w-full">
           <RecipeEditor editor={editor} />
         </div>
+        <TagEditor {...tagProps} />
       </div>
 
-      <EditActionBar
-        onSaveDraft={actions.onSaveDraft}
-        onSubmit={actions.onSubmit}
-        submitDisabled={actions.submitDisabled}
-      />
+      {/* 액션 바 고정 */}
+      <div className="absolute bottom-0 left-0 z-50 w-full border-t border-gray-100/50 bg-white/80 px-6 py-4 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1000px] justify-end">
+          <EditActionBar
+            onSaveDraft={actions.onSaveDraft}
+            onSubmit={actions.onSubmit}
+            submitDisabled={actions.submitDisabled}
+          />
+        </div>
+      </div>
     </section>
   );
 };
