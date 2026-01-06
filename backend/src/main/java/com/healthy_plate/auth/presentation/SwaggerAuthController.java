@@ -12,8 +12,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "인증", description = "인증 관련 API")
 public interface SwaggerAuthController {
@@ -31,15 +33,29 @@ public interface SwaggerAuthController {
                 )
             ),
             @ApiResponse(
-                responseCode = "401",
-                description = "유효하지 않은 리프레시 토큰",
+                responseCode = "400",
+                description = "잘못된 요청 (refresh_token 쿠키 없음)",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
             ),
             @ApiResponse(
-                responseCode = "400",
-                description = "잘못된 요청",
+                responseCode = "401",
+                description = "유효하지 않거나 만료된 리프레시 토큰",
+                content = @Content(
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "403",
+                description = "프로필 등록이 필요합니다",
+                content = @Content(
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "사용자를 찾을 수 없습니다",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
@@ -79,21 +95,28 @@ public interface SwaggerAuthController {
         responses = {
             @ApiResponse(
                 responseCode = "200",
-                description = "Presigned URL 생성 성공",
+                description = "PreSigned URL 생성 성공",
                 content = @Content(
                     schema = @Schema(implementation = PresignedUrlResponse.class)
                 )
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "잘못된 요청 (지원하지 않는 파일 형식, 파일 크기 초과, contentType/fileSize 누락 등)",
+                description = "잘못된 요청 (refresh_token 쿠키 없음, 지원하지 않는 파일 형식, 파일 크기 초과, 유효성 검증 실패)",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
             ),
             @ApiResponse(
                 responseCode = "401",
-                description = "유효하지 않은 리프레시 토큰",
+                description = "유효하지 않거나 만료된 리프레시 토큰",
+                content = @Content(
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "사용자를 찾을 수 없습니다",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
@@ -101,8 +124,8 @@ public interface SwaggerAuthController {
         }
     )
     ResponseEntity<PresignedUrlResponse> getPresignedUrl(
-        PresignedUrlRequest request,
-        HttpServletRequest httpRequest
+            @Valid @RequestBody PresignedUrlRequest request,
+            HttpServletRequest httpRequest
     );
 
     @Operation(
@@ -131,14 +154,21 @@ public interface SwaggerAuthController {
             ),
             @ApiResponse(
                 responseCode = "400",
-                description = "잘못된 요청 (유효성 검증 실패, 파일 형식 오류, 파일 크기 초과 등)",
+                description = "잘못된 요청 (refresh_token 쿠키 없음, 유효성 검증 실패)",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
             ),
             @ApiResponse(
                 responseCode = "401",
-                description = "유효하지 않은 리프레시 토큰",
+                description = "유효하지 않거나 만료된 리프레시 토큰",
+                content = @Content(
+                    schema = @Schema(implementation = ErrorResponse.class)
+                )
+            ),
+            @ApiResponse(
+                responseCode = "404",
+                description = "사용자를 찾을 수 없습니다",
                 content = @Content(
                     schema = @Schema(implementation = ErrorResponse.class)
                 )
@@ -146,7 +176,7 @@ public interface SwaggerAuthController {
         }
     )
     ResponseEntity<TokenResponse> registerUserInfo(
-        RegisterUserProfileRequest request,
+        @Valid @RequestBody RegisterUserProfileRequest request,
         HttpServletRequest httpRequest
     );
 
