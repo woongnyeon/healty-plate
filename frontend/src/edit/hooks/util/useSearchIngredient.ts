@@ -10,7 +10,7 @@ export const useSearchIngredient = (ingredients: Ingredient[]) => {
       setDebouncedQuery(query);
     }, 300);
 
-    return () => clearInterval(timer);
+    return () => clearTimeout(timer);
   }, [query]);
 
   const results = useMemo(() => {
