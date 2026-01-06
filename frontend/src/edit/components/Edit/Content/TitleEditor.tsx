@@ -7,7 +7,7 @@ interface TitleEditorProps {
   handleKeyDown: (e: React.KeyboardEvent<HTMLTextAreaElement>) => void;
   currentLength: number;
     
-  // Config props (optional, but mostly handled by hook now)
+  // 설정용 props
   placeholder?: string;
   maxLength?: number;
   showCount?: boolean;
