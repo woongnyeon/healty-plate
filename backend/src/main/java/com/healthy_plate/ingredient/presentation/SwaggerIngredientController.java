@@ -5,6 +5,7 @@ import com.healthy_plate.ingredient.presentation.dto.IngredientResponse;
 import com.healthy_plate.ingredient.presentation.dto.IngredientUpdateRequest;
 import com.healthy_plate.shared.error.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,13 +25,13 @@ public interface SwaggerIngredientController {
         tags = "식재료",
         description = """
             새로운 식재료를 생성합니다.
-
+            
             **필수 필드:**
             - name: 식재료명 (최대 100자)
             - servingSize: 제공량
             - unit: 단위
             - calorie: 칼로리
-
+            
             **선택 필드:**
             - nameEn: 영문 식재료명 (최대 100자)
             """,
@@ -62,11 +63,11 @@ public interface SwaggerIngredientController {
         tags = "식재료",
         description = """
             식재료를 이름으로 검색합니다.
-
+            
             **검색 방식:**
             - name 파라미터가 없으면 전체 식재료 목록을 반환합니다.
             - name 파라미터가 있으면 해당 이름을 포함하는 식재료를 검색합니다.
-
+            
             **응답 필드:**
             - name: 식재료명
             - calorie: 칼로리
@@ -76,7 +77,7 @@ public interface SwaggerIngredientController {
                 responseCode = "200",
                 description = "검색 성공",
                 content = @Content(
-                    schema = @Schema(implementation = IngredientResponse.class)
+                    array = @ArraySchema(schema = @Schema(implementation = IngredientResponse.class))
                 )
             )
         }
@@ -88,14 +89,14 @@ public interface SwaggerIngredientController {
         tags = "식재료",
         description = """
             기존 식재료 정보를 수정합니다.
-
+            
             **수정 가능한 필드:**
             - name: 식재료명 (최대 100자)
             - nameEn: 영문 식재료명 (최대 100자)
             - servingSize: 제공량
             - unit: 단위
             - calorie: 칼로리
-
+            
             **참고:** 모든 필드는 선택적이며, 제공된 필드만 수정됩니다.
             """,
         responses = {
