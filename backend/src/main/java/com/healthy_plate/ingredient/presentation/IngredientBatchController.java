@@ -19,15 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/batch")
 @RequiredArgsConstructor
-public class IngredientBatchController {
+public class IngredientBatchController implements SwaggerIngredientBatchController {
 
     private final JobLauncher jobLauncher;
     private final Job importIngredientJob;
     private final IngredientRepository ingredientRepository;
 
-    /**
-     * 식품 데이터 삭제 POST /api/batch/ingredients/clear
-     */
     @PostMapping("/ingredients/clear")
     public ResponseEntity<Map<String, Object>> clearIngredientData() {
         Map<String, Object> response = new HashMap<>();
@@ -54,9 +51,6 @@ public class IngredientBatchController {
         }
     }
 
-    /**
-     * 식품 데이터 로딩 배치 Job 실행 POST /api/batch/ingredients/load
-     */
     @PostMapping("/ingredients/load")
     public ResponseEntity<Map<String, Object>> loadIngredientData() {
         Map<String, Object> response = new HashMap<>();
