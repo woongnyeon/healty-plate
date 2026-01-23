@@ -50,8 +50,8 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
-    @Column(nullable = false)
-    private boolean is_active;
+    @Column(name = "is_active", nullable = false)
+    private boolean isActive;
 
     @CreatedDate
     @Column(updatable = false)
@@ -65,14 +65,14 @@ public class User {
         final OAuth2Provider provider,
         final String providerId,
         final UserRole role,
-        final boolean is_active
+        final boolean isActive
     ) {
         this.email = email;
         this.profile = profile;
         this.provider = provider;
         this.providerId = providerId;
         this.role = role;
-        this.is_active = is_active;
+        this.isActive = isActive;
     }
 
     public void updateProfile(final String nickname, final String profileImageUrl, final String introduction) {

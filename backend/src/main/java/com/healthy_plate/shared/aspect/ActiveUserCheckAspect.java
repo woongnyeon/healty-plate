@@ -38,7 +38,7 @@ public class ActiveUserCheckAspect {
         final User user = userRepository.findById(userId)
             .orElseThrow(() -> new BusinessException(BusinessErrorCode.USER_NOT_FOUND));
 
-        if (!user.is_active()) {
+        if (!user.isActive()) {
             log.warn("[AOP] 비활성 유저의 작업 시도 - userId: {}, email: {}", userId, user.getEmail());
             throw new BusinessException(BusinessErrorCode.INACTIVE_USER_CANNOT_POST);
         }
