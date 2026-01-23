@@ -36,8 +36,7 @@ public class Ingredient extends BaseEntity {
 
     @Embedded
     private ServingSize servingSize;
-
-
+    
     @Enumerated(EnumType.STRING)
     @Column(name = "unit", length = 10)
     private IngredientUnit unit;
@@ -47,8 +46,8 @@ public class Ingredient extends BaseEntity {
     private RegistrationType registrationType = RegistrationType.SYSTEM;
 
     //등록한 회원
-    @Embedded
-    private RegisterId registerId;
+    @Column(name = "registered_id")
+    private Long registerId;
 
     //검증 여부 (관리자 승인)
     @Column(name = "is_verified", nullable = false)
@@ -62,7 +61,7 @@ public class Ingredient extends BaseEntity {
         final IngredientUnit unit,
         final RegistrationType registrationType,
         final boolean isVerified,
-        final RegisterId registerId
+        final Long registerId
     ) {
         this.name = name;
         this.nameEn = nameEn;
