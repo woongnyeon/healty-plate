@@ -4,9 +4,11 @@ import com.healthy_plate.shared.error.exception.BusinessException;
 import com.healthy_plate.shared.error.exception.CustomAuthenticationException;
 import com.healthy_plate.shared.error.exception.S3Exception;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -78,5 +80,27 @@ public class GlobalExceptionHandler {
             request.getRequestURI()
         );
         return ResponseEntity.status(httpStatus).body(errorResponse);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleValidationException(
+        final MethodArgumentNotValidException e,
+        final HttpServletRequest request
+    ) {
+        String message = e.getBindingResult().getFieldErrors().stream()
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .collect(Collectors.joining(", "));
+
+        log.warn("Validation Exception - URI '{} {}', 메시지: {}",
+            request.getMethod(), request.getRequestURI(), message);
+
+        final ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.BAD_REQUEST.value(),
+            "VALIDATION_ERROR",
+            message,
+            request.getMethod(),
+            request.getRequestURI()
+        );
+        return ResponseEntity.badRequest().body(errorResponse);
     }
 }
