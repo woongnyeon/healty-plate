@@ -6,8 +6,8 @@ public record IngredientResponse(String name, Integer calorie) {
 
     public static IngredientResponse from(final Ingredient ingredient) {
         return new IngredientResponse(
-            ingredient.getName().getValue(),
-            ingredient.getCalorie().getValue()
+            ingredient.getName(),
+            ingredient.getCalorie()
         );
     }
 }

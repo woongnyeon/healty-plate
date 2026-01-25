@@ -3,12 +3,9 @@ package com.healthy_plate.ingredient.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-import com.healthy_plate.ingredient.domain.model.Calorie;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
-import com.healthy_plate.ingredient.domain.model.IngredientName;
 import com.healthy_plate.ingredient.domain.model.IngredientUnit;
 import com.healthy_plate.ingredient.domain.model.RegistrationType;
-import com.healthy_plate.ingredient.domain.model.ServingSize;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -25,10 +22,9 @@ class IngredientTest {
     @DisplayName("유효한 값으로 Ingredient 객체를 생성한다")
     void createIngredientWithValidValues(String testName) {
         // given
-        IngredientName name = IngredientName.of(testName);
-        String nameEn = null;
-        Calorie calorie = Calorie.of(41);
-        ServingSize servingSize = ServingSize.of(100.0);
+        String name = testName;
+        Integer calorie = 41;
+        Double servingSize = 100.0;
         IngredientUnit unit = IngredientUnit.G;
         RegistrationType registrationType = RegistrationType.SYSTEM;
 
@@ -62,9 +58,9 @@ class IngredientTest {
     @DisplayName("시스템 식재료를 생성한다 (Batch용)")
     void createSystemIngredient() {
         // given
-        IngredientName name = IngredientName.of("쌀");
-        Calorie calorie = Calorie.of(130);
-        ServingSize servingSize = ServingSize.of(100.0);
+        String name = "쌀";
+        Integer calorie = 130;
+        Double servingSize = 100.0;
         IngredientUnit unit = IngredientUnit.G;
 
         // when
@@ -88,17 +84,17 @@ class IngredientTest {
     void updateIngredient() {
         // given
         Ingredient ingredient = Ingredient.createSystemIngredient(
-            IngredientName.of("당근"),
-            Calorie.of(41),
-            ServingSize.of(100.0),
+            "당근",
+            41,
+            100.0,
             IngredientUnit.G
         );
 
-        IngredientName newName = IngredientName.of("당근(데친것)");
+        String newName = "당근(데친것)";
         String newNameEn = "Boiled Carrot";
-        ServingSize newServingSize = ServingSize.of(150.0);
+        Double newServingSize = 150.0;
         IngredientUnit newUnit = IngredientUnit.G;
-        Calorie newCalorie = Calorie.of(35);
+        Integer newCalorie = 35;
 
         // when
         ingredient.updateIngredient(newName, newNameEn, newServingSize, newUnit, newCalorie);
@@ -117,16 +113,16 @@ class IngredientTest {
     @DisplayName("식재료 이름만 업데이트한다")
     void updateIngredientNameOnly() {
         // given
-        IngredientName originalName = IngredientName.of("당근");
-        Calorie originalCalorie = Calorie.of(41);
+        String originalName = "당근";
+        Integer originalCalorie = 41;
         Ingredient ingredient = Ingredient.createSystemIngredient(
             originalName,
             originalCalorie,
-            ServingSize.of(100.0),
+            100.0,
             IngredientUnit.G
         );
 
-        IngredientName newName = IngredientName.of("당근(생것)");
+        String newName = "당근(생것)";
 
         // when
         ingredient.updateIngredient(newName, null, null, null, null);
@@ -149,13 +145,10 @@ class IngredientTest {
         String expectedUnit,
         String expectedDescription
     ) {
-        // given
-        IngredientName name = IngredientName.of(ingredientName);
-        Calorie calorie = Calorie.of(calorieValue);
-        ServingSize servingSize = ServingSize.of(servingSizeValue);
-
         // when
-        Ingredient ingredient = Ingredient.createSystemIngredient(name, calorie, servingSize, unit);
+        Ingredient ingredient = Ingredient.createSystemIngredient(
+            ingredientName, calorieValue, servingSizeValue, unit
+        );
 
         // then
         assertSoftly(softly -> {
@@ -182,9 +175,9 @@ class IngredientTest {
     @DisplayName("USER 타입으로 식재료를 생성한다")
     void createUserTypeIngredient() {
         // given
-        IngredientName name = IngredientName.of("직접 등록 식재료");
-        Calorie calorie = Calorie.of(100);
-        ServingSize servingSize = ServingSize.of(50.0);
+        String name = "직접 등록 식재료";
+        Integer calorie = 100;
+        Double servingSize = 50.0;
 
         // when
         Ingredient ingredient = new Ingredient(
@@ -209,9 +202,9 @@ class IngredientTest {
     @DisplayName("칼로리가 0인 식재료를 생성한다")
     void createIngredientWithZeroCalorie() {
         // given
-        IngredientName name = IngredientName.of("물");
-        Calorie calorie = Calorie.of(0);
-        ServingSize servingSize = ServingSize.of(200.0);
+        String name = "물";
+        Integer calorie = 0;
+        Double servingSize = 200.0;
 
         // when
         Ingredient ingredient = Ingredient.createSystemIngredient(
@@ -222,6 +215,6 @@ class IngredientTest {
         );
 
         // then
-        assertThat(ingredient.getCalorie().getValue()).isEqualTo(0);
+        assertThat(ingredient.getCalorie()).isEqualTo(0);
     }
 }

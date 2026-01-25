@@ -2,7 +2,6 @@ package com.healthy_plate.ingredient.domain.model;
 
 import com.healthy_plate.shared.domain.BaseEntity;
 import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,18 +24,18 @@ public class Ingredient extends BaseEntity {
     @Column(name = "ingredient_id")
     private Long id;
 
-    @Embedded
-    private IngredientName name;
+    @Column(name = "name", length = 100, nullable = false, unique = true)
+    private String name;
 
     @Column(name = "name_en", length = 100)
     private String nameEn;
 
-    @Embedded
-    private Calorie calorie;
+    @Column(name = "calorie")
+    private Integer calorie;
 
-    @Embedded
-    private ServingSize servingSize;
-    
+    @Column(name = "serving_size")
+    private Double servingSize;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "unit", length = 10)
     private IngredientUnit unit;
@@ -45,19 +44,17 @@ public class Ingredient extends BaseEntity {
     @Column(name = "registration_type", length = 20, nullable = false)
     private RegistrationType registrationType = RegistrationType.SYSTEM;
 
-    //등록한 회원
     @Column(name = "registered_id")
     private Long registerId;
 
-    //검증 여부 (관리자 승인)
     @Column(name = "is_verified", nullable = false)
     private Boolean isVerified;
 
     public Ingredient(
-        final IngredientName name,
+        final String name,
         final String nameEn,
-        final Calorie calorie,
-        final ServingSize servingSize,
+        final Integer calorie,
+        final Double servingSize,
         final IngredientUnit unit,
         final RegistrationType registrationType,
         final boolean isVerified,
@@ -73,11 +70,10 @@ public class Ingredient extends BaseEntity {
         this.isVerified = isVerified;
     }
 
-    // Batch 로딩용 정적 팩토리 메서드
     public static Ingredient createSystemIngredient(
-        final IngredientName name,
-        final Calorie calorie,
-        final ServingSize servingSize,
+        final String name,
+        final Integer calorie,
+        final Double servingSize,
         final IngredientUnit unit
     ) {
         return new Ingredient(
@@ -93,11 +89,11 @@ public class Ingredient extends BaseEntity {
     }
 
     public void updateIngredient(
-        final IngredientName name,
+        final String name,
         final String nameEn,
-        final ServingSize servingSize,
+        final Double servingSize,
         final IngredientUnit unit,
-        final Calorie calorie
+        final Integer calorie
     ) {
         if (name != null) {
             this.name = name;
@@ -115,6 +111,4 @@ public class Ingredient extends BaseEntity {
             this.calorie = calorie;
         }
     }
-
-
 }

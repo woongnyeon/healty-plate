@@ -1,11 +1,8 @@
 package com.healthy_plate.ingredient.infrastructure.batch;
 
-import com.healthy_plate.ingredient.domain.model.Calorie;
 import com.healthy_plate.ingredient.domain.model.CsvIngredient;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
-import com.healthy_plate.ingredient.domain.model.IngredientName;
 import com.healthy_plate.ingredient.domain.model.IngredientUnit;
-import com.healthy_plate.ingredient.domain.model.ServingSize;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -87,13 +84,7 @@ public class IngredientBatchConfig {
                 Integer calorie = validateAndParseCalorie(csvRow, foodName);
                 Double servingSize = validateAndParseServingSize(csvRow, foodName);
 
-                // Value Object 생성
-                IngredientName ingredientName = IngredientName.of(foodName.trim());
-                Calorie calorieVO = Calorie.of(calorie);
-                ServingSize servingSizeVO = ServingSize.of(servingSize);
-
-                // Ingredient 생성
-                return Ingredient.createSystemIngredient(ingredientName, calorieVO, servingSizeVO, unit);
+                return Ingredient.createSystemIngredient(foodName.trim(), calorie, servingSize, unit);
 
             } catch (Exception e) {
                 log.error("데이터 처리 중 오류 발생: {}", csvRow, e);
