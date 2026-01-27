@@ -18,7 +18,7 @@ class EmailTest {
     void createEmailWithValidValue(String testEmail) {
 
         //when
-        Email email = Email.of(testEmail);
+        Email email = Email.from(testEmail);
 
         //then
         assertThat(email.getValue().equals(testEmail));
@@ -30,7 +30,7 @@ class EmailTest {
     @DisplayName("이메일이 null이거나 공백이면 예외가 발생한다")
     void throwExceptionWhenEmailIsNullOrBlank(String invalidEmail) {
         // when & then
-        assertThatThrownBy(() -> Email.of(invalidEmail))
+        assertThatThrownBy(() -> Email.from(invalidEmail))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("이메일은 필수입니다.");
     }
@@ -39,7 +39,7 @@ class EmailTest {
     @ValueSource(strings = {"invalid", "test@", "@example.com", "test@.com", "test @example.com"})
     @DisplayName("잘못된 이메일 형식이면 예외가 발생한다")
     void throwExceptionWhenEmailFormatIsInvalid(String invalidEmail) {
-        assertThatThrownBy(() -> Email.of(invalidEmail))
+        assertThatThrownBy(() -> Email.from(invalidEmail))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("올바른 이메일 형식이 아닙니다.");
     }

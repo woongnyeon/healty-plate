@@ -40,7 +40,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(final OAuth2Provider provider, final OAuth2UserInfo userInfo) {
-        final Email email = Email.of(userInfo.getEmail());
+        final Email email = Email.from(userInfo.getEmail());
         final UserProfile profile = UserProfile.createEmpty();
         final User user = new User(
             email,

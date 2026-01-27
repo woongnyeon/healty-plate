@@ -18,7 +18,7 @@ class UserTest {
     @DisplayName("유효한 값으로 User 객체를 생성한다")
     void createUserWithValidValues() {
         // given
-        Email email = Email.of("test@example.com");
+        Email email = Email.from("test@example.com");
         UserProfile profile = UserProfile.of("테스트유저", "https://example.com/profile.jpg", "안녕하세요 꿈나무입니다.");
         OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "google-123456";
@@ -41,7 +41,7 @@ class UserTest {
     @DisplayName("Google 제공자로 User 객체를 생성한다")
     void createUserWithGoogleProvider() {
         // given
-        Email email = Email.of("google@example.com");
+        Email email = Email.from("google@example.com");
         UserProfile profile = UserProfile.of("구글유저", null, "안녕하세요 꿈나무입니다.");
         OAuth2Provider provider = OAuth2Provider.GOOGLE;
         String providerId = "google-123";
@@ -60,7 +60,7 @@ class UserTest {
     @DisplayName("Kakao 제공자로 User 객체를 생성한다")
     void createUserWithKakaoProvider() {
         // given
-        Email email = Email.of("kakao@example.com");
+        Email email = Email.from("kakao@example.com");
         UserProfile profile = UserProfile.of("카카오유저", null, "안녕하세요 꿈나무입니다.");
         OAuth2Provider provider = OAuth2Provider.KAKAO;
         String providerId = "kakao-456";
@@ -79,7 +79,7 @@ class UserTest {
     @DisplayName("Naver 제공자로 User 객체를 생성한다")
     void createUserWithNaverProvider() {
         // given
-        Email email = Email.of("naver@example.com");
+        Email email = Email.from("naver@example.com");
         UserProfile profile = UserProfile.of("네이버유저", null, "안녕하세요 꿈나무입니다.");
         OAuth2Provider provider = OAuth2Provider.NAVER;
         String providerId = "naver-789";
@@ -98,7 +98,7 @@ class UserTest {
     @DisplayName("ADMIN 권한으로 User 객체를 생성한다")
     void createUserWithAdminRole() {
         // given
-        Email email = Email.of("admin@example.com");
+        Email email = Email.from("admin@example.com");
         UserProfile profile = UserProfile.of("관리자", null, "안녕하세요 꿈나무입니다.");
 
         // when
