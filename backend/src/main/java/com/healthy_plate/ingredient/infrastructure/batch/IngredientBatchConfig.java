@@ -84,7 +84,7 @@ public class IngredientBatchConfig {
                 Integer calorie = validateAndParseCalorie(csvRow, foodName);
                 Double servingSize = validateAndParseServingSize(csvRow, foodName);
 
-                return Ingredient.createSystemIngredient(foodName.trim(), calorie, servingSize, unit);
+                return Ingredient.createSystemIngredient(foodName.trim(), null, calorie, servingSize, unit);
 
             } catch (Exception e) {
                 log.error("데이터 처리 중 오류 발생: {}", csvRow, e);

@@ -51,7 +51,7 @@ public class Ingredient extends BaseEntity {
     private Boolean isVerified;
 
 
-    public Ingredient(
+    private Ingredient(
         final String name,
         final String nameEn,
         final Integer calorie,
@@ -73,20 +73,23 @@ public class Ingredient extends BaseEntity {
 
     public static Ingredient createSystemIngredient(
         final String name,
+        final String nameEn,
         final Integer calorie,
         final Double servingSize,
         final IngredientUnit unit
     ) {
-        return new Ingredient(
-            name,
-            null,
-            calorie,
-            servingSize,
-            unit,
-            RegistrationType.SYSTEM,
-            true,
-            null
-        );
+        return new Ingredient(name, nameEn, calorie, servingSize, unit, RegistrationType.SYSTEM, true, null);
+    }
+
+    public static Ingredient createUserIngredient(
+        final String name,
+        final String nameEn,
+        final Integer calorie,
+        final Double servingSize,
+        final IngredientUnit unit,
+        final Long registerId
+    ) {
+        return new Ingredient(name, nameEn, calorie, servingSize, unit, RegistrationType.USER, false, registerId);
     }
 
     public void updateIngredient(

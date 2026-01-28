@@ -26,19 +26,9 @@ class IngredientTest {
         Integer calorie = 41;
         Double servingSize = 100.0;
         IngredientUnit unit = IngredientUnit.G;
-        RegistrationType registrationType = RegistrationType.SYSTEM;
 
         // when
-        Ingredient ingredient = new Ingredient(
-            name,
-            null,
-            calorie,
-            servingSize,
-            unit,
-            registrationType,
-            true,
-            null
-        );
+        Ingredient ingredient = Ingredient.createSystemIngredient(name, null, calorie, servingSize, unit);
 
         // then
         assertSoftly(softly -> {
@@ -47,7 +37,7 @@ class IngredientTest {
             softly.assertThat(ingredient.getCalorie()).isEqualTo(calorie);
             softly.assertThat(ingredient.getServingSize()).isEqualTo(servingSize);
             softly.assertThat(ingredient.getUnit()).isEqualTo(unit);
-            softly.assertThat(ingredient.getRegistrationType()).isEqualTo(registrationType);
+            softly.assertThat(ingredient.getRegistrationType()).isEqualTo(RegistrationType.SYSTEM);
             softly.assertThat(ingredient.getIsVerified()).isTrue();
             softly.assertThat(ingredient.getRegisterId()).isNull();
         });
@@ -64,7 +54,7 @@ class IngredientTest {
         IngredientUnit unit = IngredientUnit.G;
 
         // when
-        Ingredient ingredient = Ingredient.createSystemIngredient(name, calorie, servingSize, unit);
+        Ingredient ingredient = Ingredient.createSystemIngredient(name, null, calorie, servingSize, unit);
 
         // then
         assertSoftly(softly -> {
@@ -85,6 +75,7 @@ class IngredientTest {
         // given
         Ingredient ingredient = Ingredient.createSystemIngredient(
             "당근",
+            null,
             41,
             100.0,
             IngredientUnit.G
@@ -117,6 +108,7 @@ class IngredientTest {
         Integer originalCalorie = 41;
         Ingredient ingredient = Ingredient.createSystemIngredient(
             originalName,
+            null,
             originalCalorie,
             100.0,
             IngredientUnit.G
@@ -147,7 +139,7 @@ class IngredientTest {
     ) {
         // when
         Ingredient ingredient = Ingredient.createSystemIngredient(
-            ingredientName, calorieValue, servingSizeValue, unit
+            ingredientName, null, calorieValue, servingSizeValue, unit
         );
 
         // then
@@ -180,14 +172,12 @@ class IngredientTest {
         Double servingSize = 50.0;
 
         // when
-        Ingredient ingredient = new Ingredient(
+        Ingredient ingredient = Ingredient.createUserIngredient(
             name,
             null,
             calorie,
             servingSize,
             IngredientUnit.G,
-            RegistrationType.USER,
-            false,
             null
         );
 
@@ -209,6 +199,7 @@ class IngredientTest {
         // when
         Ingredient ingredient = Ingredient.createSystemIngredient(
             name,
+            null,
             calorie,
             servingSize,
             IngredientUnit.ML

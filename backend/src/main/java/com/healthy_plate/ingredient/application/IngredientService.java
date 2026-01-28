@@ -3,7 +3,6 @@ package com.healthy_plate.ingredient.application;
 import com.healthy_plate.ingredient.application.dto.IngredientWithUserDto;
 import com.healthy_plate.ingredient.domain.model.Ingredient;
 import com.healthy_plate.ingredient.domain.model.IngredientUnit;
-import com.healthy_plate.ingredient.domain.model.RegistrationType;
 import com.healthy_plate.ingredient.domain.repository.IngredientRepository;
 import com.healthy_plate.shared.error.exception.BusinessErrorCode;
 import com.healthy_plate.shared.error.exception.BusinessException;
@@ -29,15 +28,12 @@ public class IngredientService {
         if (ingredientRepository.existsByName(name)) {
             throw new BusinessException(BusinessErrorCode.EXIST_INGREDIENT);
         }
-        Ingredient ingredient = new Ingredient(
+        Ingredient ingredient = Ingredient.createSystemIngredient(
             name,
             nameEn,
             calorie,
             servingSize,
-            IngredientUnit.fromUnit(unit),
-            RegistrationType.SYSTEM,
-            true,
-            null
+            IngredientUnit.fromUnit(unit)
         );
         ingredientRepository.save(ingredient);
     }
