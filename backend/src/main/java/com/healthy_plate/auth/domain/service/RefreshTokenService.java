@@ -27,7 +27,7 @@ public class RefreshTokenService {
         existedToken.ifPresent(old -> refreshTokenRepository.deleteByToken(old.getToken()));
 
         final LocalDateTime expiryDate = LocalDateTime.now().plusSeconds(refreshTokenExpiration / 1000);
-        final RefreshToken refreshToken = new RefreshToken(token, userId, expiryDate);
+        final RefreshToken refreshToken = RefreshToken.create(token, userId, expiryDate);
         refreshTokenRepository.save(refreshToken);
 
         return token;

@@ -19,7 +19,7 @@ public class RefreshTokenTest {
         LocalDateTime expiryDate = LocalDateTime.now().plusDays(7);
 
         // when
-        RefreshToken refreshToken = new RefreshToken(token, userId, expiryDate);
+        RefreshToken refreshToken = RefreshToken.create(token, userId, expiryDate);
 
         // then
         assertSoftly(softly -> {
@@ -38,7 +38,7 @@ public class RefreshTokenTest {
         LocalDateTime expiryDate = LocalDateTime.now().minusDays(1);
 
         // when
-        RefreshToken refreshToken = new RefreshToken(token, userId, expiryDate);
+        RefreshToken refreshToken = RefreshToken.create(token, userId, expiryDate);
 
         // then
         assertThat(refreshToken.isExpired()).isTrue();
